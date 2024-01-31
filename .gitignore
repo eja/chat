@@ -1,6 +1,6 @@
 chat
 chat.exe
-config.json
+chat.json
 tibula.db
 
 !cmd/chat

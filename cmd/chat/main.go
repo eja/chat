@@ -32,7 +32,7 @@ func main() {
 	chatOptions.TypeConfig = sys.Options
 	if sys.Commands.Start {
 		if chatOptions.DbName == "" && chatOptions.ConfigFile == "" {
-			if err := sys.ConfigRead("config.json", &chatOptions); err != nil {
+			if err := sys.ConfigRead(sys.ConfigFileName(), &chatOptions); err != nil {
 				log.Fatal("Config file missing or not enough parameters to continue.")
 			}
 		}

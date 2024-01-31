@@ -7,6 +7,7 @@ import (
 )
 
 func chatWizard() error {
+
 	chatOptions.GoogleCredentials = sys.WizardPrompt("Google Application Credentials file path")
 	chatOptions.MetaUrl = sys.WizardPrompt("Meta graph api url")
 	chatOptions.MetaUser = sys.WizardPrompt("Meta user id")
