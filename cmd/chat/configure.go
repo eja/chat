@@ -14,6 +14,7 @@ var chatOptions TypeConfigChat
 
 type TypeConfigChat struct {
 	sys.TypeConfig
+	MediaPath         string `json:"media_path,omitempty"`
 	GoogleCredentials string `json:"google_credentials,omitempty"`
 	MetaUrl           string `json:"meta_url,omitempty"`
 	MetaUser          string `json:"meta_user,omitempty"`
@@ -23,6 +24,7 @@ type TypeConfigChat struct {
 }
 
 func Configure() error {
+	flag.StringVar(&chatOptions.MediaPath, "media-path", "/tmp/", "Media temporary folder")
 	flag.StringVar(&chatOptions.GoogleCredentials, "google-credentials", "google.json", "Google application credentials file path")
 	flag.StringVar(&chatOptions.MetaUrl, "meta-url", "", "Meta graph api url")
 	flag.StringVar(&chatOptions.MetaUser, "meta-user", "", "Meta user id")
