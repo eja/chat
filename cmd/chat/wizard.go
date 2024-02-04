@@ -8,12 +8,16 @@ import (
 
 func chatWizard() error {
 
+	chatOptions.MediaPath = sys.WizardPrompt("Media temporary folder path")
 	chatOptions.GoogleCredentials = sys.WizardPrompt("Google Application Credentials file path")
-	chatOptions.MetaUrl = sys.WizardPrompt("Meta graph api url")
-	chatOptions.MetaUser = sys.WizardPrompt("Meta user id")
-	chatOptions.MetaAuth = sys.WizardPrompt("Meta auth")
-	chatOptions.MetaToken = sys.WizardPrompt("Meta token")
+	chatOptions.OpenaiToken = sys.WizardPrompt("OpenAI API key")
 	chatOptions.TelegramToken = sys.WizardPrompt("Telegram token")
+	chatOptions.MetaUrl = sys.WizardPrompt("Meta graph api url")
+	if chatOptions.MetaUrl != "" {
+		chatOptions.MetaUser = sys.WizardPrompt("Meta user id")
+		chatOptions.MetaAuth = sys.WizardPrompt("Meta auth")
+		chatOptions.MetaToken = sys.WizardPrompt("Meta token")
+	}
 
 	configFile := chatOptions.ConfigFile
 	chatOptions.ConfigFile = ""

@@ -7,25 +7,25 @@ import (
 	"net/http"
 )
 
-type ChatCompletionResponse struct {
+type OpenaiCompletionResponse struct {
 	ID      string `json:"id"`
 	Object  string `json:"object"`
 	Created int64  `json:"created"`
 	Model   string `json:"model"`
 	Choices []struct {
 		Index        int `json:"index"`
-		Message      Message
+		Message      OpenaiMessage
 		Logprobs     interface{} `json:"logprobs"`
 		FinishReason string      `json:"finish_reason"`
 	} `json:"choices"`
 }
 
-type Message struct {
+type OpenaiMessage struct {
 	Role    string `json:"role"`
 	Content string `json:"content"`
 }
 
-func makeOpenAIAPIRequest(model string, messages []Message) (string, error) {
+func OpenaiRequest(model string, messages []OpenaiMessage) (string, error) {
 	url := "https://api.openai.com/v1/chat/completions"
 
 	// Define the request payload
@@ -56,7 +56,7 @@ func makeOpenAIAPIRequest(model string, messages []Message) (string, error) {
 	defer resp.Body.Close()
 
 	// Parse the response
-	var response ChatCompletionResponse
+	var response OpenaiCompletionResponse
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		return "", fmt.Errorf("Error decoding JSON response: %v", err)
 	}

@@ -6,7 +6,7 @@ import (
 	"github.com/eja/tibula/web"
 )
 
-func Init() error {
+func Router() error {
 	web.Router.HandleFunc("/meta", MetaRouter)
 	web.Router.HandleFunc("/tg", TelegramRouter)
 	return nil
