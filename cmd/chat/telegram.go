@@ -12,26 +12,16 @@ import (
 	"os"
 )
 
-func TelegramRouter(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodGet {
-		hubMode := r.URL.Query().Get("hub.mode")
-		verifyToken := r.URL.Query().Get("hub.verify_token")
-		if hubMode == "subscribe" && verifyToken == chatOptions.MetaToken {
-			w.Write([]byte(r.URL.Query().Get("hub.challenge")))
-		} else {
-			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("Token verification error"))
-		}
-	} else {
-
-	}
+type TypeTelegramMediaData struct {
+	OK     bool                   `json:"ok"`
+	Result map[string]interface{} `json:"result"`
 }
 
-func TelegramSendText(chatID string, text string) error {
+func TelegramSendText(chatId string, text string) error {
 	sendMessageURL := fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage", chatOptions.TelegramToken)
 
 	payload := map[string]string{
-		"chat_id": chatID,
+		"chat_id": chatId,
 		"text":    text,
 	}
 
@@ -49,8 +39,8 @@ func TelegramSendText(chatID string, text string) error {
 	return nil
 }
 
-func TelegramMediaGet(fileID string, fileName string) error {
-	getFileURL := fmt.Sprintf("https://api.telegram.org/bot%s/getFile?file_id=%s", chatOptions.TelegramToken, fileID)
+func TelegramMediaGet(fileId string, fileName string) error {
+	getFileURL := fmt.Sprintf("https://api.telegram.org/bot%s/getFile?file_id=%s", chatOptions.TelegramToken, fileId)
 
 	resp, err := http.Get(getFileURL)
 	if err != nil {
@@ -58,13 +48,17 @@ func TelegramMediaGet(fileID string, fileName string) error {
 	}
 	defer resp.Body.Close()
 
-	var data map[string]interface{}
+	var data TypeTelegramMediaData
 	if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
 		return fmt.Errorf("error parsing JSON response: %v", err)
 	}
 
-	if ok, result, filePath := data["ok"].(bool), data["result"].(map[string]interface{}), data["result"].(map[string]interface{})["file_path"].(string); ok && filePath != "" {
-		filePath := result["file_path"].(string)
+	if data.OK {
+		filePath, ok := data.Result["file_path"].(string)
+		if !ok || filePath == "" {
+			return fmt.Errorf("failed to retrieve file path")
+		}
+
 		fileURL := fmt.Sprintf("https://api.telegram.org/file/bot%s/%s", chatOptions.TelegramToken, filePath)
 
 		fileResponse, err := http.Get(fileURL)
@@ -90,13 +84,13 @@ func TelegramMediaGet(fileID string, fileName string) error {
 	return nil
 }
 
-func TelegramSendAudio(chatID string, fileName string, caption string) error {
+func TelegramSendAudio(chatId string, fileName string, caption string) error {
 	sendVoiceURL := fmt.Sprintf("https://api.telegram.org/bot%s/sendVoice", chatOptions.TelegramToken)
 
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
 
-	writer.WriteField("chat_id", chatID)
+	writer.WriteField("chat_id", chatId)
 
 	if caption != "" {
 		writer.WriteField("caption", caption)

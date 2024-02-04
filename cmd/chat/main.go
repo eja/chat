@@ -13,7 +13,6 @@ func main() {
 	if err := Configure(); err != nil {
 		log.Fatal(err)
 	}
-	chatOptions.TypeConfig = sys.Options
 	if sys.Commands.Start {
 		if chatOptions.DbName == "" {
 			log.Fatal("Database name/file is mandatory.")

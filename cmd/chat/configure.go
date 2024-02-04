@@ -37,9 +37,14 @@ func Configure() error {
 	if err := sys.Configure(); err != nil {
 		return err
 	}
+	chatOptions.TypeConfig = sys.Options
 
-	if chatOptions.ConfigFile != "" {
-		if err := sys.ConfigRead(chatOptions.ConfigFile, &chatOptions); err != nil {
+	if sys.Commands.Start && sys.Options.ConfigFile == "" {
+		sys.Options.ConfigFile = Name + ".json"
+	}
+
+	if sys.Options.ConfigFile != "" {
+		if err := sys.ConfigRead(sys.Options.ConfigFile, &chatOptions); err != nil {
 			return err
 		}
 	}
