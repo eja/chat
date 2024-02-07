@@ -7,25 +7,25 @@ import (
 	"net/http"
 )
 
-type OpenaiCompletionResponse struct {
+type typeOpenaiResponse struct {
 	ID      string `json:"id"`
 	Object  string `json:"object"`
 	Created int64  `json:"created"`
 	Model   string `json:"model"`
 	Choices []struct {
 		Index        int `json:"index"`
-		Message      OpenaiMessage
+		Message      typeOpenaiMessage
 		Logprobs     interface{} `json:"logprobs"`
 		FinishReason string      `json:"finish_reason"`
 	} `json:"choices"`
 }
 
-type OpenaiMessage struct {
+type typeOpenaiMessage struct {
 	Role    string `json:"role"`
 	Content string `json:"content"`
 }
 
-func OpenaiRequest(model string, messages []OpenaiMessage) (string, error) {
+func openaiRequest(model string, messages []typeOpenaiMessage) (string, error) {
 	url := "https://api.openai.com/v1/chat/completions"
 
 	// Define the request payload
@@ -56,7 +56,7 @@ func OpenaiRequest(model string, messages []OpenaiMessage) (string, error) {
 	defer resp.Body.Close()
 
 	// Parse the response
-	var response OpenaiCompletionResponse
+	var response typeOpenaiResponse
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		return "", fmt.Errorf("Error decoding JSON response: %v", err)
 	}
@@ -69,23 +69,3 @@ func OpenaiRequest(model string, messages []OpenaiMessage) (string, error) {
 
 	return "", fmt.Errorf("No valid assistant message in the response")
 }
-
-/*
-func main() {
-	model := "gpt-3.5-turbo"
-	messages := []Message{
-		{Role: "system", Content: "You are a helpful assistant."},
-		{Role: "user", Content: "Who won the world series in 2020?"},
-		{Role: "assistant", Content: "The Los Angeles Dodgers won the World Series in 2020."},
-		{Role: "user", Content: "Where was it played?"},
-	}
-
-	content, err := makeOpenAIAPIRequest(model, messages)
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
-	}
-
-	fmt.Println("Assistant's Response:", content)
-}
-*/

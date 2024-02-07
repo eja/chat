@@ -12,12 +12,12 @@ import (
 	"os"
 )
 
-type TypeTelegramMediaData struct {
+type typeTelegramMediaData struct {
 	OK     bool                   `json:"ok"`
 	Result map[string]interface{} `json:"result"`
 }
 
-func TelegramSendText(chatId string, text string) error {
+func telegramSendText(chatId string, text string) error {
 	sendMessageURL := fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage", Options.TelegramToken)
 
 	payload := map[string]string{
@@ -39,7 +39,7 @@ func TelegramSendText(chatId string, text string) error {
 	return nil
 }
 
-func TelegramMediaGet(fileId string, fileName string) error {
+func telegramMediaGet(fileId string, fileName string) error {
 	getFileURL := fmt.Sprintf("https://api.telegram.org/bot%s/getFile?file_id=%s", Options.TelegramToken, fileId)
 
 	resp, err := http.Get(getFileURL)
@@ -48,7 +48,7 @@ func TelegramMediaGet(fileId string, fileName string) error {
 	}
 	defer resp.Body.Close()
 
-	var data TypeTelegramMediaData
+	var data typeTelegramMediaData
 	if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
 		return fmt.Errorf("error parsing JSON response: %v", err)
 	}
@@ -84,7 +84,7 @@ func TelegramMediaGet(fileId string, fileName string) error {
 	return nil
 }
 
-func TelegramSendAudio(chatId string, fileName string, caption string) error {
+func telegramSendAudio(chatId string, fileName string, caption string) error {
 	sendVoiceURL := fmt.Sprintf("https://api.telegram.org/bot%s/sendVoice", Options.TelegramToken)
 
 	body := &bytes.Buffer{}

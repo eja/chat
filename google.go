@@ -13,7 +13,7 @@ import (
 	texttospeechpb "google.golang.org/genproto/googleapis/cloud/texttospeech/v1"
 )
 
-func GoogleASR(fileName string, language string) (string, error) {
+func googleASR(fileName string, language string) (string, error) {
 	ctx := context.Background()
 
 	data, err := ioutil.ReadFile(fileName)
@@ -35,7 +35,7 @@ func GoogleASR(fileName string, language string) (string, error) {
 
 	audio := &speechpb.RecognitionAudio{
 		AudioSource: &speechpb.RecognitionAudio_Content{
-			Content: data, //base64.StdEncoding.EncodeToString(data),
+			Content: data,
 		},
 	}
 
@@ -57,7 +57,7 @@ func GoogleASR(fileName string, language string) (string, error) {
 	return transcript, nil
 }
 
-func GoogleTTS(fileName string, text string, language string) error {
+func googleTTS(fileName string, text string, language string) error {
 	ctx := context.Background()
 
 	client, err := texttospeech.NewClient(ctx, option.WithCredentialsFile(Options.GoogleCredentials))
@@ -74,7 +74,7 @@ func GoogleTTS(fileName string, text string, language string) error {
 		},
 		Voice: &texttospeechpb.VoiceSelectionParams{
 			LanguageCode: language,
-			// SsmlGender:   texttospeechpb.SsmlVoiceGender_MALE,
+			//			SsmlGender:   texttospeechpb.SsmlVoiceGender_MALE,
 		},
 		AudioConfig: &texttospeechpb.AudioConfig{
 			AudioEncoding: texttospeechpb.AudioEncoding_OGG_OPUS,

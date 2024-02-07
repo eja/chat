@@ -10,19 +10,19 @@ import (
 	"time"
 )
 
-type TypeAiMessage = OpenaiMessage
-
 const historyTimeout = 300
 const model = "gpt-3.5-turbo-0125"
 
-var history map[string][]TypeAiMessage
+var history map[string][]typeAiMessage
 var historyTime map[string]time.Time
 var historyInit bool
 
+type typeAiMessage = typeOpenaiMessage
+
 func aiChat(userId, message, language string) (string, error) {
-	Trace(userId, message, language)
+	logTrace(userId, message, language)
 	if !historyInit {
-		history = make(map[string][]TypeAiMessage)
+		history = make(map[string][]typeAiMessage)
 		historyTime = make(map[string]time.Time)
 		historyInit = true
 	}
@@ -38,82 +38,82 @@ func aiChat(userId, message, language string) (string, error) {
 		"eja.tv, a portal to watch thousands of live IPTV channels from around the world\n" +
 		"cronotopia, a portal to interact with historical events time and geo-referenced\n" +
 		"When asked for information about you, eja, or eja.it, you must take into consideration the above data.\n" +
-		fmt.Sprintf("The user usually speaks in %s, so please answer in that language or the language of the question if not instructed otherwise.\n", LanguageCodeToInternal(language)) +
+		fmt.Sprintf("The user usually speaks in %s, so please answer in that language or the language of the question if not instructed otherwise.\n", languageCodeToInternal(language)) +
 		"Always append a new line containing only the language code between square brackets that you have used to answer the question at the end of your response, like this: \n[en]\n" +
 		""
 
 	if strings.HasPrefix(message, "/") {
 		if message == "/help" {
-			response = Translate(language, "help")
+			response = translate(language, "help")
 		}
 
 		if message == "/reset" {
 			delete(history, userId)
-			response = Translate(language, "reset")
+			response = translate(language, "reset")
 		}
 
 		if message == "/audio on" {
-			user, err := DbUserGet(userId)
+			user, err := dbUserGet(userId)
 			if err != nil {
 				return "", err
 			}
 			if db.Number(user["audio"]) > 0 {
-				err := DbUserUpdate(userId, "audio", "2")
+				err := dbUserUpdate(userId, "audio", "2")
 				if err != nil {
 					return "", err
 				}
-				response = Translate(language, "audio_on")
+				response = translate(language, "audio_on")
 			} else {
-				response = Translate(language, "audio_disabled")
+				response = translate(language, "audio_disabled")
 			}
 		}
 
 		if message == "/audio off" {
-			user, err := DbUserGet(userId)
+			user, err := dbUserGet(userId)
 			if err != nil {
 				return "", err
 			}
 			if db.Number(user["audio"]) > 0 {
-				err := DbUserUpdate(userId, "audio", "1")
+				err := dbUserUpdate(userId, "audio", "1")
 				if err != nil {
 					return "", err
 				}
-				response = Translate(language, "audio_off")
+				response = translate(language, "audio_off")
 			} else {
-				response = Translate(language, "audio_disabled")
+				response = translate(language, "audio_disabled")
 			}
 		}
 
 		if matched, _ := regexp.MatchString(`^/[a-zA-Z]{2}$`, message); matched {
 			language = message[1:]
-			err := DbUserUpdate(userId, "language", language)
+			err := dbUserUpdate(userId, "language", language)
 			if err != nil {
 				return "", err
 			}
-			response = Translate(language, "welcome")
+			response = translate(language, "welcome")
 			delete(history, userId)
 		}
 	}
 
 	if response == "" {
 		if hist, ok := history[userId]; ok && len(hist) > 0 && (time.Now().Sub(historyTime[userId]).Seconds() < historyTimeout) {
-			history[userId] = append(history[userId], TypeAiMessage{
+			history[userId] = append(history[userId], typeAiMessage{
 				Role:    "user",
 				Content: message,
 			})
 		} else {
-			history[userId] = []TypeAiMessage{
+			history[userId] = []typeAiMessage{
 				{Role: "system", Content: system},
 				{Role: "user", Content: message},
 			}
 		}
 
-		assistant, err := OpenaiRequest(model, history[userId])
+		assistant, err := openaiRequest(model, history[userId])
 		if err != nil {
 			return "", err
 		}
 		historyTime[userId] = time.Now()
-		history[userId] = append(history[userId], TypeAiMessage{
+		history[userId] = append(history[userId], typeAiMessage{
 			Role:    "assistant",
 			Content: assistant,
 		})

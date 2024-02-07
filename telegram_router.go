@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-type TypeTelegramMessage struct {
+type typeTelegramMessage struct {
 	Message struct {
 		From struct {
 			Id           int    `json:"id"`
@@ -28,51 +28,51 @@ type TypeTelegramMessage struct {
 	} `json:"message"`
 }
 
-func TelegramRouter(w http.ResponseWriter, r *http.Request) {
+func telegramRouter(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		const platform = "telegram"
-		var telegramMessage TypeTelegramMessage
+		var telegramMessage typeTelegramMessage
 
 		err := json.NewDecoder(r.Body).Decode(&telegramMessage)
 		if err != nil {
 			errMessage := "Error decoding request body"
 			http.Error(w, errMessage, http.StatusBadRequest)
-			Debug(errMessage)
+			logWarn(errMessage)
 			return
 		}
 
-		Trace("TG incoming message", telegramMessage)
+		logTrace("TG incoming message", telegramMessage)
 		userId := fmt.Sprintf("TG.%d", telegramMessage.Message.From.Id)
 		chatId := fmt.Sprintf("%d", telegramMessage.Message.Chat.Id)
 		chatLanguage := telegramMessage.Message.From.LanguageCode
 
-		user, _ := DbUserGet(userId)
+		user, _ := dbUserGet(userId)
 		if db.Number(user["ejaId"]) > 0 {
 			if db.Number(user["welcome"]) < 1 {
-				TelegramSendText(
+				telegramSendText(
 					chatId,
-					Translate(chatLanguage, "welcome"),
+					translate(chatLanguage, "welcome"),
 				)
-				DbUserUpdate(userId, "welcome", "1")
+				dbUserUpdate(userId, "welcome", "1")
 			}
 
 			if text := telegramMessage.Message.Text; text != "" {
-				response, err := ProcessText(userId, user["language"], text)
+				response, err := processText(userId, user["language"], text)
 				if err != nil {
-					response = Translate(user["language"], "process_text_error")
-					Error("TG", userId, chatId, err)
+					response = translate(user["language"], "process_text_error")
+					logWarn("TG", userId, chatId, err)
 				}
-				if err := TelegramSendText(
+				if err := telegramSendText(
 					chatId,
 					response,
 				); err != nil {
-					Error("TG", userId, chatId, err)
+					logWarn("TG", userId, chatId, err)
 				}
 			}
 
 			if voice := telegramMessage.Message.Voice; voice.FileId != "" {
 				if db.Number(user["audio"]) > 0 {
-					_, err := ProcessAudio(
+					_, err := processAudio(
 						platform,
 						userId,
 						user["language"],
@@ -81,23 +81,23 @@ func TelegramRouter(w http.ResponseWriter, r *http.Request) {
 						db.Number(user["audio"]) > 1,
 					)
 					if err != nil {
-						Error("TG", userId, chatId, err)
-						if err := TelegramSendText(chatId, Translate(chatLanguage, "process_audio_error")); err != nil {
-							Error("TG", userId, chatId, err)
+						logWarn("TG", userId, chatId, err)
+						if err := telegramSendText(chatId, translate(chatLanguage, "process_audio_error")); err != nil {
+							logWarn("TG", userId, chatId, err)
 						}
 					}
 				} else {
-					if err := TelegramSendText(
+					if err := telegramSendText(
 						chatId,
-						Translate(user["language"], "audio_disabled"),
+						translate(user["language"], "audio_disabled"),
 					); err != nil {
-						Error("TG", userId, chatId, err)
+						logWarn("TG", userId, chatId, err)
 					}
 				}
 			}
 		} else {
-			if err := TelegramSendText(chatId, Translate(chatLanguage, "user_unknown")); err != nil {
-				Error("TG", userId, chatId, err)
+			if err := telegramSendText(chatId, translate(chatLanguage, "user_unknown")); err != nil {
+				logWarn("TG", userId, chatId, err)
 			}
 		}
 	}

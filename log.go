@@ -8,20 +8,29 @@ import (
 	"regexp"
 )
 
-func Log(level int, args ...interface{}) {
+const (
+	logLevelError = 1
+	logLevelWarn  = 2
+	logLevelInfo  = 3
+	logLevelDebug = 4
+	logLevelTrace = 5
+)
+
+func logMessage(level int, args ...interface{}) {
 	msg := ""
 	switch level {
-	case 1:
+	case logLevelError:
 		msg = "[E]"
-	case 2:
+	case logLevelWarn:
 		msg = "[W]"
-	case 3:
+	case logLevelInfo:
 		msg = "[I]"
-	case 4:
+	case logLevelDebug:
 		msg = "[D]"
-	case 5:
+	case logLevelTrace:
 		msg = "[T]"
 	}
+
 	for _, arg := range args {
 		if str, ok := arg.(string); ok {
 			arg = regexp.MustCompile(`[\n\t\s]+`).ReplaceAllString(str, " ")
@@ -33,22 +42,22 @@ func Log(level int, args ...interface{}) {
 	}
 }
 
-func Error(args ...interface{}) {
-	Log(1, args...)
+func logError(args ...interface{}) {
+	logMessage(logLevelError, args...)
 }
 
-func Warn(args ...interface{}) {
-	Log(2, args...)
+func logWarn(args ...interface{}) {
+	logMessage(logLevelWarn, args...)
 }
 
-func Info(args ...interface{}) {
-	Log(3, args...)
+func logInfo(args ...interface{}) {
+	logMessage(logLevelInfo, args...)
 }
 
-func Debug(args ...interface{}) {
-	Log(4, args...)
+func logDebug(args ...interface{}) {
+	logMessage(logLevelDebug, args...)
 }
 
-func Trace(args ...interface{}) {
-	Log(5, args...)
+func logTrace(args ...interface{}) {
+	logMessage(logLevelTrace, args...)
 }

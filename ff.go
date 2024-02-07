@@ -7,49 +7,43 @@ import (
 	"os/exec"
 )
 
-// Function to execute FFmpeg commands
-func runFFmpeg(args []string) error {
+func ffmpeg(args []string) error {
 	baseArgs := []string{"-y", "-nostdin", "-hide_banner"}
 	cmd := exec.Command("ffmpeg", append(baseArgs, args...)...)
-	Trace("ffmpeg", args)
+	logTrace("ffmpeg", args)
 	return cmd.Run()
 }
 
-// Function to execute ffprobe commands
-func runFFprobe(args []string) ([]byte, error) {
+func ffprobe(args []string) ([]byte, error) {
 	baseArgs := []string{"-y", "-nostdin", "-hide_banner", "-v", "error"}
 	cmd := exec.Command("ffprobe", append(baseArgs, args...)...)
-	Trace("ffprobe", args)
+	logTrace("ffprobe", args)
 	return cmd.Output()
 }
 
-// Function to convert audio using FFmpeg for Google compatibility
-func FFAudioGoogle(fileIn string, fileOut string) error {
-	return runFFmpeg([]string{
+func ffmpegAudioGoogle(fileIn string, fileOut string) error {
+	return ffmpeg([]string{
 		"-i", fileIn,
 		"-vn", "-ar", "48000", "-ac", "1", "-c:a", "libopus", "-f", "ogg", fileOut,
 	})
 }
 
-// Function to convert audio for metadata extraction
-func FFAudioMeta(fileIn string, fileOut string) error {
-	return runFFmpeg([]string{
+func ffmpegAudioMeta(fileIn string, fileOut string) error {
+	return ffmpeg([]string{
 		"-i", fileIn,
 		"-vn", "-ar", "48000", "-b:a", "12k", "-ac", "1", "-c:a", "libopus", "-f", "ogg", fileOut,
 	})
 }
 
-// Function to convert audio for whisper compatibility
-func FFAudioWhisper(fileIn string, fileOut string) error {
-	return runFFmpeg([]string{
+func ffmpegAudioWhisper(fileIn string, fileOut string) error {
+	return ffmpeg([]string{
 		"-i", fileIn,
 		"-ar", "16000", "-ac", "1", "-c:a", "pcm_s16le", "-f", "wav", fileOut,
 	})
 }
 
-// Function to retrieve audio information using ffprobe
-func FFProbeAudio(file string) (map[string]interface{}, error) {
-	output, err := runFFprobe([]string{
+func ffprobeAudio(file string) (map[string]interface{}, error) {
+	output, err := ffprobe([]string{
 		"-print_format", "json", "-show_format", "-show_streams", file,
 	})
 	if err != nil {

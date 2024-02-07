@@ -6,11 +6,16 @@ import (
 	"github.com/eja/tibula/db"
 )
 
-func Translate(languageCode string, label string) string {
-	return "{" + label + "}"
+func translate(languageCode string, label string) string {
+	value, err := db.Value("SELECT translation FROM aiTranslations WHERE label=? AND language=? LIMIT 1", label, languageCode)
+	if err != nil || value == "" {
+		return "{" + label + "}"
+	} else {
+		return value
+	}
 }
 
-func LanguageCodeToLocale(language string) string {
+func languageCodeToLocale(language string) string {
 	if locale, err := db.Value("SELECT locale FROM aiLanguages WHERE code = ?", language); err != nil {
 		return ""
 	} else {
@@ -18,7 +23,7 @@ func LanguageCodeToLocale(language string) string {
 	}
 }
 
-func LanguageCodeToInternal(language string) string {
+func languageCodeToInternal(language string) string {
 	if value, err := db.Value("SELECT internal FROM aiLanguages WHERE code = ?", language); err != nil {
 		return ""
 	} else {

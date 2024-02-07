@@ -9,14 +9,13 @@ import (
 )
 
 func Router() error {
-	//open db connection
 	db.LogLevel = sys.Options.LogLevel
 	if err := db.Open(sys.Options.DbType, sys.Options.DbName, sys.Options.DbUser, sys.Options.DbPass, sys.Options.DbHost, sys.Options.DbPort); err != nil {
 		return err
 	}
 
-	web.Router.HandleFunc("/meta", MetaRouter)
-	web.Router.HandleFunc("/tg", TelegramRouter)
+	web.Router.HandleFunc("/meta", metaRouter)
+	web.Router.HandleFunc("/tg", telegramRouter)
 
 	return nil
 }

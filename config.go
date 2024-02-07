@@ -8,11 +8,11 @@ import (
 )
 
 const Name = "chat"
-const Version = "2.1.30"
+const Version = "2.2.7"
 
-var Options TypeConfigChat
+var Options typeConfigChat
 
-type TypeConfigChat struct {
+type typeConfigChat struct {
 	sys.TypeConfig
 	MediaPath         string `json:"media_path,omitempty"`
 	GoogleCredentials string `json:"google_credentials,omitempty"`
@@ -26,7 +26,7 @@ type TypeConfigChat struct {
 
 func Configure() error {
 	flag.StringVar(&Options.MediaPath, "media-path", "/tmp/", "Media temporary folder")
-	flag.StringVar(&Options.GoogleCredentials, "google-credentials", "google.json", "Google application credentials file path")
+	flag.StringVar(&Options.GoogleCredentials, "google-credentials", "", "Google application credentials file path")
 	flag.StringVar(&Options.MetaUrl, "meta-url", "", "Meta graph api url")
 	flag.StringVar(&Options.MetaUser, "meta-user", "", "Meta user id")
 	flag.StringVar(&Options.MetaAuth, "meta-auth", "", "Meta auth")
