@@ -35,10 +35,13 @@ func TelegramRouter(w http.ResponseWriter, r *http.Request) {
 
 		err := json.NewDecoder(r.Body).Decode(&telegramMessage)
 		if err != nil {
-			http.Error(w, "Error decoding request body", http.StatusBadRequest)
+			errMessage := "Error decoding request body"
+			http.Error(w, errMessage, http.StatusBadRequest)
+			Debug(errMessage)
 			return
 		}
 
+		Trace("TG incoming message", telegramMessage)
 		userId := fmt.Sprintf("TG.%d", telegramMessage.Message.From.Id)
 		chatId := fmt.Sprintf("%d", telegramMessage.Message.Chat.Id)
 		chatLanguage := telegramMessage.Message.From.LanguageCode
@@ -54,41 +57,48 @@ func TelegramRouter(w http.ResponseWriter, r *http.Request) {
 			}
 
 			if text := telegramMessage.Message.Text; text != "" {
-				TelegramSendText(
-					fmt.Sprintf("%d", telegramMessage.Message.Chat.Id),
-					ProcessText(userId, user["language"], text),
-				)
+				response, err := ProcessText(userId, user["language"], text)
+				if err != nil {
+					response = Translate(user["language"], "process_text_error")
+					Error("TG", userId, chatId, err)
+				}
+				if err := TelegramSendText(
+					chatId,
+					response,
+				); err != nil {
+					Error("TG", userId, chatId, err)
+				}
 			}
 
 			if voice := telegramMessage.Message.Voice; voice.FileId != "" {
-				llm := true
-				if forwarded := telegramMessage.Message.Context.Forwarded; forwarded {
-					llm = false
-				}
-				if llm {
-					//?
-				}
 				if db.Number(user["audio"]) > 0 {
-					response, err := ProcessAudio(
+					_, err := ProcessAudio(
 						platform,
-						chatId,
+						userId,
 						user["language"],
+						chatId,
 						voice.FileId,
 						db.Number(user["audio"]) > 1,
-						llm,
 					)
-					if err == nil && response != "" {
-						TelegramSendText(chatId, response)
+					if err != nil {
+						Error("TG", userId, chatId, err)
+						if err := TelegramSendText(chatId, Translate(chatLanguage, "process_audio_error")); err != nil {
+							Error("TG", userId, chatId, err)
+						}
 					}
 				} else {
-					TelegramSendText(
+					if err := TelegramSendText(
 						chatId,
 						Translate(user["language"], "audio_disabled"),
-					)
+					); err != nil {
+						Error("TG", userId, chatId, err)
+					}
 				}
 			}
 		} else {
-			TelegramSendText(chatId, Translate(chatLanguage, "user_unknown"))
+			if err := TelegramSendText(chatId, Translate(chatLanguage, "user_unknown")); err != nil {
+				Error("TG", userId, chatId, err)
+			}
 		}
 	}
 }

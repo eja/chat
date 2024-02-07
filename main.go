@@ -14,7 +14,7 @@ func main() {
 		log.Fatal(err)
 	}
 	if sys.Commands.Start {
-		if chatOptions.DbName == "" {
+		if Options.DbName == "" {
 			log.Fatal("Database name/file is mandatory.")
 		}
 		if err := Router(); err != nil {

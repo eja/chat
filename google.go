@@ -21,7 +21,7 @@ func GoogleASR(fileName string, language string) (string, error) {
 		return "", err
 	}
 
-	client, err := speech.NewClient(ctx, option.WithCredentialsFile(chatOptions.GoogleCredentials))
+	client, err := speech.NewClient(ctx, option.WithCredentialsFile(Options.GoogleCredentials))
 	if err != nil {
 		return "", err
 	}
@@ -60,7 +60,7 @@ func GoogleASR(fileName string, language string) (string, error) {
 func GoogleTTS(fileName string, text string, language string) error {
 	ctx := context.Background()
 
-	client, err := texttospeech.NewClient(ctx, option.WithCredentialsFile(chatOptions.GoogleCredentials))
+	client, err := texttospeech.NewClient(ctx, option.WithCredentialsFile(Options.GoogleCredentials))
 	if err != nil {
 		return err
 	}

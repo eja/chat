@@ -4,7 +4,6 @@ package main
 
 import (
 	"encoding/json"
-	"log"
 	"os/exec"
 )
 
@@ -12,15 +11,15 @@ import (
 func runFFmpeg(args []string) error {
 	baseArgs := []string{"-y", "-nostdin", "-hide_banner"}
 	cmd := exec.Command("ffmpeg", append(baseArgs, args...)...)
-	log.Println("FFmpeg: ", args)
+	Trace("ffmpeg", args)
 	return cmd.Run()
 }
 
 // Function to execute ffprobe commands
 func runFFprobe(args []string) ([]byte, error) {
-	baseArgs := []string{"-y", "-nostdin", "-hide_banner"}
+	baseArgs := []string{"-y", "-nostdin", "-hide_banner", "-v", "error"}
 	cmd := exec.Command("ffprobe", append(baseArgs, args...)...)
-	log.Println("FFprobe: ", args)
+	Trace("ffprobe", args)
 	return cmd.Output()
 }
 
@@ -51,7 +50,7 @@ func FFAudioWhisper(fileIn string, fileOut string) error {
 // Function to retrieve audio information using ffprobe
 func FFProbeAudio(file string) (map[string]interface{}, error) {
 	output, err := runFFprobe([]string{
-		"-v", "quiet", "-print_format", "json", "-show_format", "-show_streams", file,
+		"-print_format", "json", "-show_format", "-show_streams", file,
 	})
 	if err != nil {
 		return nil, err

@@ -45,7 +45,7 @@ func OpenaiRequest(model string, messages []OpenaiMessage) (string, error) {
 
 	// Set headers
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer "+chatOptions.OpenaiToken)
+	req.Header.Set("Authorization", "Bearer "+Options.OpenaiToken)
 
 	// Make the request
 	client := &http.Client{}

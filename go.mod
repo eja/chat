@@ -5,7 +5,7 @@ go 1.21
 require (
 	cloud.google.com/go/speech v1.21.0
 	cloud.google.com/go/texttospeech v1.7.4
-	github.com/eja/tibula v0.0.0-20240201120046-81028526b389
+	github.com/eja/tibula v0.0.0-20240207091735-e3eaa6a1d626
 	google.golang.org/api v0.161.0
 	google.golang.org/genproto v0.0.0-20240125205218-1f4bbc51befe
 )
@@ -24,7 +24,7 @@ require (
 	github.com/google/s2a-go v0.1.7 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.2 // indirect
 	github.com/googleapis/gax-go/v2 v2.12.0 // indirect
-	github.com/mattn/go-sqlite3 v1.14.20 // indirect
+	github.com/mattn/go-sqlite3 v1.14.22 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.47.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.47.0 // indirect

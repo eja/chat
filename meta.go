@@ -17,7 +17,7 @@ func MetaRouter(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		hubMode := r.URL.Query().Get("hub.mode")
 		verifyToken := r.URL.Query().Get("hub.verify_token")
-		if hubMode == "subscribe" && verifyToken == chatOptions.MetaToken {
+		if hubMode == "subscribe" && verifyToken == Options.MetaToken {
 			w.Write([]byte(r.URL.Query().Get("hub.challenge")))
 		} else {
 			w.WriteHeader(http.StatusBadRequest)
@@ -41,7 +41,7 @@ func MetaRequest(method string, url string, body interface{}, headers map[string
 		return nil, fmt.Errorf("creating request: %w", err)
 	}
 
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", chatOptions.MetaAuth))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", Options.MetaAuth))
 	for key, value := range headers {
 		req.Header.Set(key, value)
 	}
@@ -66,7 +66,7 @@ func MetaRequest(method string, url string, body interface{}, headers map[string
 }
 
 func MetaPost(data interface{}) error {
-	url := fmt.Sprintf("%s/%s/messages", chatOptions.MetaUrl, chatOptions.MetaUser)
+	url := fmt.Sprintf("%s/%s/messages", Options.MetaUrl, Options.MetaUser)
 	headers := map[string]string{
 		"Content-Type": "application/json",
 	}
@@ -76,7 +76,7 @@ func MetaPost(data interface{}) error {
 }
 
 func MetaMediaGet(mediaId string, fileName string) error {
-	url := fmt.Sprintf("%s/%s/", chatOptions.MetaUrl, mediaId)
+	url := fmt.Sprintf("%s/%s/", Options.MetaUrl, mediaId)
 	headers := map[string]string{}
 
 	responseData, err := MetaRequest("GET", url, nil, headers)
@@ -122,7 +122,7 @@ func MetaMediaUpload(fileName string, fileType string) (mediaId string, err erro
 
 	responseData, err := MetaRequest(
 		"POST",
-		fmt.Sprintf("%s/%s/media/", chatOptions.MetaUrl, chatOptions.MetaUser),
+		fmt.Sprintf("%s/%s/media/", Options.MetaUrl, Options.MetaUser),
 		b,
 		map[string]string{
 			"Content-Type": mw.FormDataContentType(),
@@ -157,7 +157,7 @@ func MetaSendText(phone string, text string) error {
 
 	_, err := MetaRequest(
 		"POST",
-		fmt.Sprintf("%s/%s/messages", chatOptions.MetaUrl, chatOptions.MetaUser),
+		fmt.Sprintf("%s/%s/messages", Options.MetaUrl, Options.MetaUser),
 		messageData,
 		nil,
 	)
@@ -173,7 +173,7 @@ func MetaSendStatus(messageId string, status string) error {
 
 	_, err := MetaRequest(
 		"POST",
-		fmt.Sprintf("%s/%s/messages/%s/status", chatOptions.MetaUrl, chatOptions.MetaUser, messageId),
+		fmt.Sprintf("%s/%s/messages/%s/status", Options.MetaUrl, Options.MetaUser, messageId),
 		statusData,
 		nil,
 	)
@@ -194,7 +194,7 @@ func MetaReaction(recipient string, messageId string, emoji string) (string, err
 
 	responseData, err := MetaRequest(
 		"POST",
-		fmt.Sprintf("%s/%s/messages", chatOptions.MetaUrl, chatOptions.MetaUser),
+		fmt.Sprintf("%s/%s/messages", Options.MetaUrl, Options.MetaUser),
 		reactionData,
 		nil,
 	)
@@ -206,7 +206,7 @@ func MetaReaction(recipient string, messageId string, emoji string) (string, err
 }
 
 func MetaSendAudio(phone string, mediaFile string) error {
-	mediaPath := filepath.Join(chatOptions.MediaPath, phone)
+	mediaPath := filepath.Join(Options.MediaPath, phone)
 	fileAudioOutput := mediaPath + ".audio.meta.out"
 
 	probeOutput, err := FFProbeAudio(mediaFile) // Assuming ffProbeAudio returns a struct with codec_name, sample_rate, and channel_layout
@@ -236,6 +236,6 @@ func MetaSendAudio(phone string, mediaFile string) error {
 			"id": mediaUploadId,
 		},
 	}
-	_, err = MetaRequest("POST", fmt.Sprintf("%s/%s/messages", chatOptions.MetaUrl, chatOptions.MetaUser), messageData, nil)
+	_, err = MetaRequest("POST", fmt.Sprintf("%s/%s/messages", Options.MetaUrl, Options.MetaUser), messageData, nil)
 	return err
 }

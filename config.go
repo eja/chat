@@ -10,7 +10,7 @@ import (
 const Name = "chat"
 const Version = "2.1.30"
 
-var chatOptions TypeConfigChat
+var Options TypeConfigChat
 
 type TypeConfigChat struct {
 	sys.TypeConfig
@@ -25,26 +25,26 @@ type TypeConfigChat struct {
 }
 
 func Configure() error {
-	flag.StringVar(&chatOptions.MediaPath, "media-path", "/tmp/", "Media temporary folder")
-	flag.StringVar(&chatOptions.GoogleCredentials, "google-credentials", "google.json", "Google application credentials file path")
-	flag.StringVar(&chatOptions.MetaUrl, "meta-url", "", "Meta graph api url")
-	flag.StringVar(&chatOptions.MetaUser, "meta-user", "", "Meta user id")
-	flag.StringVar(&chatOptions.MetaAuth, "meta-auth", "", "Meta auth")
-	flag.StringVar(&chatOptions.MetaToken, "meta-token", "", "Meta token")
-	flag.StringVar(&chatOptions.TelegramToken, "telegram-token", "", "Telegram token")
-	flag.StringVar(&chatOptions.OpenaiToken, "openai-token", "", "OpenAI token")
+	flag.StringVar(&Options.MediaPath, "media-path", "/tmp/", "Media temporary folder")
+	flag.StringVar(&Options.GoogleCredentials, "google-credentials", "google.json", "Google application credentials file path")
+	flag.StringVar(&Options.MetaUrl, "meta-url", "", "Meta graph api url")
+	flag.StringVar(&Options.MetaUser, "meta-user", "", "Meta user id")
+	flag.StringVar(&Options.MetaAuth, "meta-auth", "", "Meta auth")
+	flag.StringVar(&Options.MetaToken, "meta-token", "", "Meta token")
+	flag.StringVar(&Options.TelegramToken, "telegram-token", "", "Telegram token")
+	flag.StringVar(&Options.OpenaiToken, "openai-token", "", "OpenAI token")
 
 	if err := sys.Configure(); err != nil {
 		return err
 	}
-	chatOptions.TypeConfig = sys.Options
+	Options.TypeConfig = sys.Options
 
 	if sys.Commands.Start && sys.Options.ConfigFile == "" {
 		sys.Options.ConfigFile = Name + ".json"
 	}
 
 	if sys.Options.ConfigFile != "" {
-		if err := sys.ConfigRead(sys.Options.ConfigFile, &chatOptions); err != nil {
+		if err := sys.ConfigRead(sys.Options.ConfigFile, &Options); err != nil {
 			return err
 		}
 	}
