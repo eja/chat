@@ -6,19 +6,25 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
-	"log"
 	"mime/multipart"
 	"net/http"
+	"os"
 	"path/filepath"
+	"strings"
 )
 
-func metaRequest(method string, url string, body interface{}, headers map[string]string) ([]byte, error) {
+func metaRequest(method string, url string, body interface{}, contentType string) ([]byte, error) {
 	var buf bytes.Buffer
-	if body != nil {
+	if contentType == "json" && body != nil {
 		if err := json.NewEncoder(&buf).Encode(body); err != nil {
 			return nil, fmt.Errorf("encoding request body: %w", err)
 		}
+	}
+
+	if strings.Contains(contentType, "multipart") && body != nil {
+		buf = body.(bytes.Buffer)
 	}
 
 	req, err := http.NewRequest(method, url, &buf)
@@ -27,8 +33,11 @@ func metaRequest(method string, url string, body interface{}, headers map[string
 	}
 
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", Options.MetaAuth))
-	for key, value := range headers {
-		req.Header.Set(key, value)
+	if contentType == "json" {
+		req.Header.Set("Content-Type", "application/json")
+	}
+	if strings.Contains(contentType, "multipart") {
+		req.Header.Set("Content-Type", contentType)
 	}
 
 	client := &http.Client{}
@@ -52,19 +61,18 @@ func metaRequest(method string, url string, body interface{}, headers map[string
 
 func metaPost(data interface{}) error {
 	url := fmt.Sprintf("%s/%s/messages", Options.MetaUrl, Options.MetaUser)
-	headers := map[string]string{
-		"Content-Type": "application/json",
-	}
-
-	_, err := metaRequest("POST", url, data, headers)
+	_, err := metaRequest("POST", url, data, "json")
 	return err
+}
+
+func metaGet(url string) ([]byte, error) {
+	return metaRequest("GET", url, nil, "")
 }
 
 func metaMediaGet(mediaId string, fileName string) error {
 	url := fmt.Sprintf("%s/%s/", Options.MetaUrl, mediaId)
-	headers := map[string]string{}
 
-	responseData, err := metaRequest("GET", url, nil, headers)
+	responseData, err := metaGet(url)
 	if err != nil {
 		return err
 	}
@@ -75,7 +83,7 @@ func metaMediaGet(mediaId string, fileName string) error {
 		return fmt.Errorf("decoding response: %w", err)
 	}
 
-	responseData, err = metaRequest("GET", data.URL, nil, headers)
+	responseData, err = metaGet(data.URL)
 	if err != nil {
 		return err
 	}
@@ -84,34 +92,42 @@ func metaMediaGet(mediaId string, fileName string) error {
 		return fmt.Errorf("writing file: %w", err)
 	}
 
-	log.Printf("Media content saved to: %s", fileName)
+	logTrace("meta media content saved to: %s", fileName)
 	return nil
 }
 
 func metaMediaUpload(fileName string, fileType string) (mediaId string, err error) {
-	data, err := ioutil.ReadFile(fileName)
+	file, err := os.Open(fileName)
 	if err != nil {
 		return "", fmt.Errorf("reading file: %w", err)
 	}
+	defer file.Close()
 
-	var b bytes.Buffer
-	mw := multipart.NewWriter(&b)
-	part, err := mw.CreateFormFile("file", filepath.Base(fileName))
+	var body bytes.Buffer
+	writer := multipart.NewWriter(&body)
+	contentType := writer.FormDataContentType()
+	writer.WriteField("type", fileType)
+	writer.WriteField("messaging_product", "whatsapp")
+	filePart, err := writer.CreatePart(map[string][]string{
+		"Content-Disposition": {"form-data; name=\"file\"; filename=\"" + fileName + "\""},
+		"Content-Type":        {fileType},
+	})
 	if err != nil {
-		return "", fmt.Errorf("creating form part: %w", err)
+		return "", fmt.Errorf("creating form file")
 	}
-	part.Write(data)
-	mw.WriteField("type", fileType)
-	mw.WriteField("messaging_product", "whatsapp")
-	mw.Close()
+	_, err = io.Copy(filePart, file)
+	if err != nil {
+		return "", fmt.Errorf("copying file into part")
+	}
+	if err := writer.Close(); err != nil {
+		return "", fmt.Errorf("closing form writer: %w", err)
+	}
 
 	responseData, err := metaRequest(
 		"POST",
-		fmt.Sprintf("%s/%s/media/", Options.MetaUrl, Options.MetaUser),
-		b,
-		map[string]string{
-			"Content-Type": mw.FormDataContentType(),
-		},
+		fmt.Sprintf("%s/%s/media", Options.MetaUrl, Options.MetaUser),
+		body,
+		contentType,
 	)
 	if err != nil {
 		return "", err
@@ -124,7 +140,7 @@ func metaMediaUpload(fileName string, fileType string) (mediaId string, err erro
 		return "", fmt.Errorf("parsing response: %w", err)
 	}
 
-	log.Printf("meta media upload %s %s\n", fileName, fileType)
+	logTrace("meta media upload %s %s\n", fileName, fileType)
 	return response.ID, nil
 }
 
@@ -140,13 +156,7 @@ func metaSendText(phone string, text string) error {
 		},
 	}
 
-	_, err := metaRequest(
-		"POST",
-		fmt.Sprintf("%s/%s/messages", Options.MetaUrl, Options.MetaUser),
-		messageData,
-		nil,
-	)
-	return err
+	return metaPost(messageData)
 }
 
 func metaSendStatus(messageId string, status string) error {
@@ -156,16 +166,10 @@ func metaSendStatus(messageId string, status string) error {
 		"status":            status,
 	}
 
-	_, err := metaRequest(
-		"POST",
-		fmt.Sprintf("%s/%s/messages/%s/status", Options.MetaUrl, Options.MetaUser, messageId),
-		statusData,
-		nil,
-	)
-	return err
+	return metaPost(statusData)
 }
 
-func metaReaction(recipient string, messageId string, emoji string) (string, error) {
+func metaReaction(recipient string, messageId string, emoji string) error {
 	reactionData := map[string]interface{}{
 		"messaging_product": "whatsapp",
 		"recipient_type":    "individual",
@@ -177,17 +181,7 @@ func metaReaction(recipient string, messageId string, emoji string) (string, err
 		},
 	}
 
-	responseData, err := metaRequest(
-		"POST",
-		fmt.Sprintf("%s/%s/messages", Options.MetaUrl, Options.MetaUser),
-		reactionData,
-		nil,
-	)
-	if err != nil {
-		return "", err
-	}
-
-	return string(responseData), nil
+	return metaPost(reactionData)
 }
 
 func metaSendAudio(phone string, mediaFile string) error {
@@ -221,6 +215,5 @@ func metaSendAudio(phone string, mediaFile string) error {
 			"id": mediaUploadId,
 		},
 	}
-	_, err = metaRequest("POST", fmt.Sprintf("%s/%s/messages", Options.MetaUrl, Options.MetaUser), messageData, nil)
-	return err
+	return metaPost(messageData)
 }

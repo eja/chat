@@ -5,7 +5,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/eja/tibula/db"
 	"net/http"
 )
 
@@ -46,9 +45,9 @@ func telegramRouter(w http.ResponseWriter, r *http.Request) {
 		chatId := fmt.Sprintf("%d", telegramMessage.Message.Chat.Id)
 		chatLanguage := telegramMessage.Message.From.LanguageCode
 
-		user, _ := dbUserGet(userId)
-		if db.Number(user["ejaId"]) > 0 {
-			if db.Number(user["welcome"]) < 1 {
+		user, err := dbUserGet(userId)
+		if err == nil && user != nil {
+			if dbNumber(user["welcome"]) < 1 {
 				telegramSendText(
 					chatId,
 					translate(chatLanguage, "welcome"),
@@ -71,14 +70,14 @@ func telegramRouter(w http.ResponseWriter, r *http.Request) {
 			}
 
 			if voice := telegramMessage.Message.Voice; voice.FileId != "" {
-				if db.Number(user["audio"]) > 0 {
+				if dbNumber(user["audio"]) > 0 {
 					_, err := processAudio(
 						platform,
 						userId,
 						user["language"],
 						chatId,
 						voice.FileId,
-						db.Number(user["audio"]) > 1,
+						dbNumber(user["audio"]) > 1,
 					)
 					if err != nil {
 						logWarn("TG", userId, chatId, err)

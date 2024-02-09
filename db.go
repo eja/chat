@@ -7,6 +7,10 @@ import (
 	"github.com/eja/tibula/db"
 )
 
+func dbNumber(value interface{}) int64 {
+	return db.Number(value)
+}
+
 func dbUserGet(id string) (db.TypeRow, error) {
 	return db.Row("SELECT * FROM aiUsers WHERE id = ? AND expiration > CURRENT_TIMESTAMP LIMIT 1", id)
 }
