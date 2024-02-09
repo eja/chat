@@ -74,10 +74,10 @@ func metaRouter(w http.ResponseWriter, r *http.Request) {
 							response, err := processText(userId, user["language"], message.Text.Body)
 							if err != nil {
 								response = translate(user["language"], "process_text_error")
-								logWarn("FB1", userId, chatId, err)
+								logWarn("FB", userId, chatId, err)
 							}
 							if err := metaSendText(userId, response); err != nil {
-								logWarn("FB2", userId, err)
+								logWarn("FB", userId, err)
 							}
 						} else if message.Audio != nil {
 							if dbNumber(user["audio"]) > 0 {
@@ -90,20 +90,20 @@ func metaRouter(w http.ResponseWriter, r *http.Request) {
 									dbNumber(user["audio"]) > 1,
 								)
 								if err != nil {
-									logWarn("FB3", userId, chatId, err)
+									logWarn("FB", userId, chatId, err)
 									if err := metaSendText(userId, translate(user["language"], "process_audio_error")); err != nil {
-										logWarn("FB4", userId, chatId, err)
+										logWarn("FB", userId, chatId, err)
 									}
 								}
 							}
 						} else {
 							if err := metaSendText(userId, translate(user["language"], "audio_disabled")); err != nil {
-								logWarn("FB5", userId, chatId, err)
+								logWarn("FB", userId, chatId, err)
 							}
 						}
 					} else {
 						if err := metaSendText(userId, translate("", "user_unknown")); err != nil {
-							logWarn("FB6", userId, chatId, err)
+							logWarn("FB", userId, chatId, err)
 						}
 					}
 				}
