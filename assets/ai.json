@@ -1,0 +1,16 @@
+{
+  "command": [
+    "logout"
+  ],
+  "name": "ai",
+  "translation": [],
+  "field": [],
+  "module": {
+    "searchLimit": 0,
+    "sqlCreated": 0,
+    "lua": "",
+    "parentName": "eja",
+    "power": 10,
+    "sortList": ""
+  }
+}

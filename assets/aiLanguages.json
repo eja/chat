@@ -1,0 +1,66 @@
+{
+  "command": [
+    "logout",
+    "new",
+    "edit",
+    "previous",
+    "next",
+    "search",
+    "save",
+    "copy",
+    "list",
+    "delete"
+  ],
+  "name": "aiLanguages",
+  "translation": [],
+  "field": [
+    {
+      "powerEdit": 10,
+      "matrixUpdate": 1,
+      "name": "code",
+      "translate": 1,
+      "type": "text",
+      "powerList": 10,
+      "powerSearch": 10,
+      "value": ""
+    },
+    {
+      "powerEdit": 20,
+      "matrixUpdate": 1,
+      "name": "locale",
+      "translate": 1,
+      "type": "text",
+      "powerList": 20,
+      "powerSearch": 0,
+      "value": ""
+    },
+    {
+      "powerEdit": 30,
+      "matrixUpdate": 1,
+      "name": "native",
+      "translate": 1,
+      "type": "text",
+      "powerList": 30,
+      "powerSearch": 30,
+      "value": ""
+    },
+    {
+      "powerEdit": 40,
+      "matrixUpdate": 1,
+      "name": "internal",
+      "translate": 1,
+      "type": "text",
+      "powerList": 40,
+      "powerSearch": 40,
+      "value": ""
+    }
+  ],
+  "module": {
+    "searchLimit": 0,
+    "sqlCreated": 1,
+    "lua": "",
+    "parentName": "ai",
+    "power": 10,
+    "sortList": ""
+  }
+}

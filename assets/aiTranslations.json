@@ -1,0 +1,56 @@
+{
+  "command": [
+    "logout",
+    "new",
+    "edit",
+    "previous",
+    "next",
+    "search",
+    "save",
+    "copy",
+    "list",
+    "delete"
+  ],
+  "name": "aiTranslations",
+  "translation": [],
+  "field": [
+    {
+      "powerEdit": 10,
+      "matrixUpdate": 1,
+      "name": "language",
+      "translate": 1,
+      "type": "sqlMatrix",
+      "powerList": 10,
+      "powerSearch": 10,
+      "value": "SELECT code,internal from aiLanguages;"
+    },
+    {
+      "powerEdit": 20,
+      "matrixUpdate": 1,
+      "name": "label",
+      "translate": 1,
+      "type": "text",
+      "powerList": 20,
+      "powerSearch": 20,
+      "value": ""
+    },
+    {
+      "powerEdit": 30,
+      "matrixUpdate": 1,
+      "name": "translation",
+      "translate": 1,
+      "type": "textArea",
+      "powerList": 30,
+      "powerSearch": 0,
+      "value": ""
+    }
+  ],
+  "module": {
+    "searchLimit": 0,
+    "sqlCreated": 1,
+    "lua": "",
+    "parentName": "ai",
+    "power": 20,
+    "sortList": ""
+  }
+}

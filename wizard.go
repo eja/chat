@@ -3,10 +3,19 @@
 package main
 
 import (
+	"embed"
+	"github.com/eja/tibula/db"
 	"github.com/eja/tibula/sys"
 )
 
+//go:embed all:assets
+var chatDbAssets embed.FS
+
 func chatWizard() error {
+	configFile := sys.Options.ConfigFile
+	if err := sys.ConfigRead(configFile, &Options); err != nil {
+		return err
+	}
 
 	Options.MediaPath = sys.WizardPrompt("Media temporary folder path")
 	Options.GoogleCredentials = sys.WizardPrompt("Google Application Credentials file path")
@@ -19,7 +28,14 @@ func chatWizard() error {
 		Options.MetaToken = sys.WizardPrompt("Meta token")
 	}
 
-	configFile := Options.ConfigFile
+	db.Assets = chatDbAssets
+	if err := db.Open(Options.DbType, Options.DbName, Options.DbUser, Options.DbPass, Options.DbHost, Options.DbPort); err != nil {
+		return err
+	}
+	if err := db.Setup(""); err != nil {
+		return err
+	}
+
 	Options.ConfigFile = ""
 	return sys.ConfigWrite(configFile, &Options)
 }
