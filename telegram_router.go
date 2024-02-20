@@ -58,7 +58,7 @@ func telegramRouter(w http.ResponseWriter, r *http.Request) {
 			if text := telegramMessage.Message.Text; text != "" {
 				response, err := processText(userId, user["language"], text)
 				if err != nil {
-					response = translate(user["language"], "process_text_error")
+					response = translate(user["language"], "error")
 					logWarn("TG", userId, chatId, err)
 				}
 				if err := telegramSendText(
@@ -81,7 +81,7 @@ func telegramRouter(w http.ResponseWriter, r *http.Request) {
 					)
 					if err != nil {
 						logWarn("TG", userId, chatId, err)
-						if err := telegramSendText(chatId, translate(chatLanguage, "process_audio_error")); err != nil {
+						if err := telegramSendText(chatId, translate(chatLanguage, "error")); err != nil {
 							logWarn("TG", userId, chatId, err)
 						}
 					}

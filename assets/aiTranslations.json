@@ -1,56 +1,212 @@
 {
+  "module": {
+    "parentName": "ai",
+    "power": 20,
+    "searchLimit": 0,
+    "sqlCreated": 1
+  },
   "command": [
     "logout",
     "new",
     "edit",
     "previous",
     "next",
-    "search",
-    "save",
     "copy",
-    "list",
-    "delete"
+    "delete",
+    "save",
+    "search",
+    "list"
   ],
-  "name": "aiTranslations",
-  "translation": [],
   "field": [
     {
+      "value": "SELECT code,internal from aiLanguages",
       "powerEdit": 10,
-      "matrixUpdate": 1,
-      "name": "language",
-      "translate": 1,
-      "type": "sqlMatrix",
       "powerList": 10,
+      "type": "sqlMatrix",
+      "translate": 0,
       "powerSearch": 10,
-      "value": "SELECT code,internal from aiLanguages;"
+      "name": "language"
     },
     {
+      "value": "",
       "powerEdit": 20,
-      "matrixUpdate": 1,
-      "name": "label",
-      "translate": 1,
-      "type": "text",
       "powerList": 20,
+      "type": "text",
+      "translate": 0,
       "powerSearch": 20,
-      "value": ""
+      "name": "label"
     },
     {
+      "value": "",
       "powerEdit": 30,
-      "matrixUpdate": 1,
-      "name": "translation",
-      "translate": 1,
-      "type": "textArea",
       "powerList": 30,
+      "type": "textArea",
+      "translate": 0,
       "powerSearch": 0,
-      "value": ""
+      "name": "translation"
     }
   ],
-  "module": {
-    "searchLimit": 0,
-    "sqlCreated": 1,
-    "lua": "",
-    "parentName": "ai",
-    "power": 20,
-    "sortList": ""
-  }
+  "translation": [
+    {
+      "ejaLanguage": "en",
+      "word": "aiTranslations",
+      "translation": "Translations"
+    },
+    {
+      "ejaLanguage": "en",
+      "ejaModuleName": "aiTranslations",
+      "word": "language",
+      "translation": "Language"
+    },
+    {
+      "ejaLanguage": "en",
+      "ejaModuleName": "aiTranslations",
+      "word": "label",
+      "translation": "Label"
+    },
+    {
+      "ejaLanguage": "en",
+      "ejaModuleName": "aiTranslations",
+      "word": "translation",
+      "translation": "Translation"
+    }
+  ],
+  "name": "aiTranslations",
+  "data": [
+    {
+      "label": "welcome",
+      "language": "it",
+      "translation": "Benvenuto, manda un messaggio con la parola */help* in qualsiasi momento per avere la lista dei comandi disponibili.\r\nRicorda che stai dialogando con un'intelligenza artificiale per cui mai ed in nessuna circostanza devi fare affidamento su cio' che ti viene detto o scritto, buon divertimento! :)"
+    },
+    {
+      "label": "audio_on",
+      "language": "it",
+      "translation": "Da questo momento se mandi messaggi audio riceverai messaggi audio."
+    },
+    {
+      "label": "audio_off",
+      "language": "it",
+      "translation": "Da questo momento riceverai sempre e solo messaggi di testo."
+    },
+    {
+      "label": "audio_disabled",
+      "language": "it",
+      "translation": "I messaggi audio sono disattivati per questo account."
+    },
+    {
+      "label": "audio_input_limit",
+      "language": "it",
+      "translation": "Mi dispiace ma la lunghezza massima di un messaggio audio e' di un minuto."
+    },
+    {
+      "label": "error",
+      "language": "it",
+      "translation": "Al momento abbiamo un piccolo problema di sistema, prova piu' tardi..."
+    },
+    {
+      "label": "reset",
+      "language": "it",
+      "translation": "Ripartiamo da zero..."
+    },
+    {
+      "label": "user_unkown",
+      "language": "it",
+      "translation": "Ciao, non vedo l'ora di aiutarti, ma sembra che il tuo numero non sia ancora autenticato nel nostro sistema."
+    },
+    {
+      "label": "help",
+      "language": "it",
+      "translation": "*/help*  questa lista di comandi\r\n*/reset*  inizia una nuova chat\r\n*/audio on*  ricevi audio messaggi se tu li mandi cosi'\r\n*/audio off*  ricevi solo messaggi di testo\r\n*/es* passa alla lingua spagnola\r\n*/en* passa all'inglese"
+    },
+    {
+      "label": "help",
+      "language": "en",
+      "translation": "*/help* this list of commands \r\n*/reset* starts a new chat \r\n*/audio on* receive audio messages if you send them as audio \r\n*/audio off* receive only text messages \r\n*/es* switch to Spanish \r\n*/it* switch to Italian"
+    },
+    {
+      "label": "user_unknown",
+      "language": "en",
+      "translation": "Hello, I can't wait to help you in every way possible, but it seems that your number is not yet authenticated in our system."
+    },
+    {
+      "label": "reset",
+      "language": "en",
+      "translation": "Let's start from scratch..."
+    },
+    {
+      "label": "error",
+      "language": "en",
+      "translation": "Currently, we have a small system issue, please try again later..."
+    },
+    {
+      "label": "audio_input_limit",
+      "language": "en",
+      "translation": "I'm sorry, but the maximum length of an audio message is one minute."
+    },
+    {
+      "label": "audio_disabled",
+      "language": "en",
+      "translation": "Audio messages are disabled for this account."
+    },
+    {
+      "label": "audio_off",
+      "language": "en",
+      "translation": "From now on, you will always receive only text messages."
+    },
+    {
+      "label": "audio_on",
+      "language": "en",
+      "translation": "From now on, if you send audio messages, you will receive audio messages."
+    },
+    {
+      "label": "welcome",
+      "language": "en",
+      "translation": "Welcome! Send a message with the word */help* anytime to get the list of available commands. \r\nRemember that you are interacting with artificial intelligence, so never rely on what is told or written to you in any circumstance. \r\nHave fun! :)"
+    },
+    {
+      "label": "help",
+      "language": "es",
+      "translation": "*/help* esta lista de comandos\r\n*/reset* inicia un nuevo chat \r\n*/audio on* recibe mensajes de audio si los envías de esta manera \r\n*/audio off* recibe solo mensajes de texto \r\n*/it* cambia al italiano \r\n*/en* cambia al inglés"
+    },
+    {
+      "label": "user_unknown",
+      "language": "es",
+      "translation": "Hola, estoy ansioso por ayudarte, pero parece que tu número aún no ha sido autenticado en nuestro sistema."
+    },
+    {
+      "label": "reset",
+      "language": "es",
+      "translation": "Empecemos desde cero..."
+    },
+    {
+      "label": "error",
+      "language": "es",
+      "translation": "Actualmente, tenemos un pequeño problema en el sistema, por favor, inténtalo de nuevo más tarde..."
+    },
+    {
+      "label": "audio_input_limit",
+      "language": "es",
+      "translation": "Lo siento, pero la longitud máxima de un mensaje de audio es de un minuto."
+    },
+    {
+      "label": "audio_disabled",
+      "language": "es",
+      "translation": "Los mensajes de audio están desactivados para esta cuenta."
+    },
+    {
+      "label": "audio_off",
+      "language": "es",
+      "translation": "A partir de ahora, solo recibirás mensajes de texto."
+    },
+    {
+      "label": "audio_on",
+      "language": "es",
+      "translation": "A partir de ahora, si envías mensajes de audio, recibirás mensajes de audio."
+    },
+    {
+      "label": "welcome",
+      "language": "es",
+      "translation": "¡Bienvenido! Envía un mensaje con la palabra */help* en cualquier momento para obtener la lista de comandos disponibles. \r\nRecuerda que estás interactuando con inteligencia artificial, así que nunca confíes en lo que se te dice o escribe en ninguna circunstancia. \r\n¡Diviértete! :)"
+    }
+  ]
 }

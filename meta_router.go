@@ -73,7 +73,7 @@ func metaRouter(w http.ResponseWriter, r *http.Request) {
 						if message.Text != nil && message.Text.Body != "" {
 							response, err := processText(userId, user["language"], message.Text.Body)
 							if err != nil {
-								response = translate(user["language"], "process_text_error")
+								response = translate(user["language"], "error")
 								logWarn("FB", userId, chatId, err)
 							}
 							if err := metaSendText(userId, response); err != nil {
@@ -91,7 +91,7 @@ func metaRouter(w http.ResponseWriter, r *http.Request) {
 								)
 								if err != nil {
 									logWarn("FB", userId, chatId, err)
-									if err := metaSendText(userId, translate(user["language"], "process_audio_error")); err != nil {
+									if err := metaSendText(userId, translate(user["language"], "error")); err != nil {
 										logWarn("FB", userId, chatId, err)
 									}
 								}

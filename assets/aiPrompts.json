@@ -1,0 +1,100 @@
+{
+  "module": {
+    "parentName": "ai",
+    "power": 50,
+    "searchLimit": 0,
+    "sqlCreated": 1
+  },
+  "command": [
+    "logout",
+    "new",
+    "edit",
+    "previous",
+    "next",
+    "copy",
+    "delete",
+    "save",
+    "search",
+    "list",
+    "link",
+    "unlink"
+  ],
+  "field": [
+    {
+      "value": "",
+      "powerEdit": 10,
+      "powerList": 10,
+      "type": "text",
+      "translate": 0,
+      "powerSearch": 10,
+      "name": "tag"
+    },
+    {
+      "value": "",
+      "powerEdit": 5,
+      "powerList": 5,
+      "type": "integer",
+      "translate": 0,
+      "powerSearch": 15,
+      "name": "power"
+    },
+    {
+      "value": "",
+      "powerEdit": 15,
+      "powerList": 15,
+      "type": "textArea",
+      "translate": 0,
+      "powerSearch": 0,
+      "name": "prompt"
+    },
+    {
+      "value": "",
+      "powerEdit": 1,
+      "powerList": 7,
+      "type": "boolean",
+      "translate": 0,
+      "powerSearch": 1,
+      "name": "active"
+    }
+  ],
+  "translation": [
+    {
+      "ejaLanguage": "en",
+      "word": "aiPrompts",
+      "translation": "Prompts"
+    },
+    {
+      "ejaLanguage": "en",
+      "ejaModuleName": "aiPrompts",
+      "word": "tag",
+      "translation": "Tag"
+    },
+    {
+      "ejaLanguage": "en",
+      "ejaModuleName": "aiPrompts",
+      "word": "power",
+      "translation": "Power"
+    },
+    {
+      "ejaLanguage": "en",
+      "ejaModuleName": "aiPrompts",
+      "word": "prompt",
+      "translation": "Prompt"
+    },
+    {
+      "ejaLanguage": "en",
+      "ejaModuleName": "aiPrompts",
+      "word": "active",
+      "translation": "Active"
+    }
+  ],
+  "name": "aiPrompts",
+  "data": [
+    {
+      "active": "1",
+      "power": "10",
+      "prompt": "You are an helpful assistant written and developed by eja.it.\r\nAnswer questions in a short but clear way.\r\neja.it is an open-source development company based between the wonderful islands of Sardinia and Tenerife.\r\nYour name is Eja, and any reference to eja.it should point to you.\r\nThe engineer who wrote this bot is Ubaldo Porcheddu.\r\neja's most notable productions are:\r\n eja.surf, an Android browser implementing all known privacy features\r\n tibula, a Dynamic RDBMS with an Intuitive Web Interface and Flexible Customization\r\n eja.tv, a portal to watch thousands of live IPTV channels from around the world\r\n cronotopia, a portal to interact with historical events time and geo-referenced\r\nWhen asked for information about you, eja, or eja.it, you must take into consideration the above data.",
+      "tag": "system"
+    }
+  ]
+}
