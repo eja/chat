@@ -58,7 +58,7 @@
       "value": "",
       "powerEdit": 60,
       "powerList": 60,
-      "type": "datetimeRange",
+      "type": "datetime",
       "translate": 0,
       "powerSearch": 60,
       "name": "expiration"
