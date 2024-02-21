@@ -76,7 +76,7 @@
     {
       "label": "welcome",
       "language": "it",
-      "translation": "Benvenuto, manda un messaggio con la parola */help* in qualsiasi momento per avere la lista dei comandi disponibili.\r\nRicorda che stai dialogando con un'intelligenza artificiale per cui mai ed in nessuna circostanza devi fare affidamento su cio' che ti viene detto o scritto, buon divertimento! :)"
+      "translation": "Benvenuto, manda un messaggio con la parola */help* in qualsiasi momento per avere la lista dei comandi disponibili. Ricorda che stai dialogando con un'intelligenza artificiale per cui mai ed in nessuna circostanza devi fare affidamento su cio' che ti viene detto o scritto, buon divertimento! :)"
     },
     {
       "label": "audio_on",
@@ -109,7 +109,7 @@
       "translation": "Ripartiamo da zero..."
     },
     {
-      "label": "user_unkown",
+      "label": "user_unknown",
       "language": "it",
       "translation": "Ciao, non vedo l'ora di aiutarti, ma sembra che il tuo numero non sia ancora autenticato nel nostro sistema."
     },
@@ -161,7 +161,7 @@
     {
       "label": "welcome",
       "language": "en",
-      "translation": "Welcome! Send a message with the word */help* anytime to get the list of available commands. \r\nRemember that you are interacting with artificial intelligence, so never rely on what is told or written to you in any circumstance. \r\nHave fun! :)"
+      "translation": "Welcome! Send a message with the word */help* anytime to get the list of available commands. Remember that you are interacting with artificial intelligence, so never rely on what is told or written to you in any circumstance. \r\nHave fun! :)"
     },
     {
       "label": "help",
@@ -206,7 +206,7 @@
     {
       "label": "welcome",
       "language": "es",
-      "translation": "¡Bienvenido! Envía un mensaje con la palabra */help* en cualquier momento para obtener la lista de comandos disponibles. \r\nRecuerda que estás interactuando con inteligencia artificial, así que nunca confíes en lo que se te dice o escribe en ninguna circunstancia. \r\n¡Diviértete! :)"
+      "translation": "¡Bienvenido! Envía un mensaje con la palabra */help* en cualquier momento para obtener la lista de comandos disponibles\nRecuerda que estás interactuando con inteligencia artificial, así que nunca confíes en lo que se te dice o escribe en ninguna circunstancia. \r\n¡Diviértete!"
     }
   ]
 }

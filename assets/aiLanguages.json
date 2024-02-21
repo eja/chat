@@ -53,6 +53,15 @@
       "translate": 0,
       "powerSearch": 40,
       "name": "internal"
+    },
+    {
+      "value": "",
+      "powerEdit": 100,
+      "powerList": 100,
+      "type": "boolean",
+      "translate": 0,
+      "powerSearch": 0,
+      "name": "default_language"
     }
   ],
   "translation": [
@@ -84,26 +93,35 @@
       "ejaModuleName": "aiLanguages",
       "word": "locale",
       "translation": "Locale"
+    },
+    {
+      "ejaLanguage": "en",
+      "ejaModuleName": "aiLanguages",
+      "word": "default_language",
+      "translation": "Default"
     }
   ],
   "name": "aiLanguages",
   "data": [
     {
       "code": "it",
+      "default_language": "0",
       "internal": "italian",
       "locale": "it_IT",
       "native": "italiano"
     },
     {
       "code": "es",
+      "default_language": "0",
       "internal": "spanish",
       "locale": "es_ES",
       "native": "español"
     },
     {
       "code": "en",
+      "default_language": "1",
       "internal": "english",
-      "locale": "en_US",
+      "locale": "en_GB",
       "native": "english"
     }
   ]

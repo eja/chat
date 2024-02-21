@@ -28,6 +28,10 @@ type typeTelegramMessage struct {
 }
 
 func telegramRouter(w http.ResponseWriter, r *http.Request) {
+	if err := dbOpen(); err != nil {
+		return
+	}
+
 	if r.Method == http.MethodPost {
 		const platform = "telegram"
 		var telegramMessage typeTelegramMessage

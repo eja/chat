@@ -27,6 +27,10 @@ type typeMetaMessage struct {
 }
 
 func metaRouter(w http.ResponseWriter, r *http.Request) {
+	if err := dbOpen(); err != nil {
+		return
+	}
+
 	if r.Method == http.MethodGet {
 		hubMode := r.URL.Query().Get("hub.mode")
 		verifyToken := r.URL.Query().Get("hub.verify_token")

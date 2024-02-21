@@ -4,7 +4,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/eja/tibula/db"
 	"regexp"
 )
 
@@ -52,7 +51,7 @@ func processAudio(platform string, userId string, language string, chatId string
 	if err != nil {
 		return "", err
 	}
-	duration := db.Number(probeInput["duration"])
+	duration := dbNumber(probeInput["duration"])
 	if duration > maxAudioInputTime {
 		return translate(language, "audio_input_limit"), nil
 	}

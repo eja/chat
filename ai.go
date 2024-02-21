@@ -4,7 +4,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/eja/tibula/db"
 	"regexp"
 	"strings"
 	"time"
@@ -27,18 +26,15 @@ func aiChat(userId, message, language string) (string, error) {
 		historyInit = true
 	}
 	var response, system string
-	system = "You are a helpful assistant written and developed by eja.it.\n" +
-		"Answer questions in a short but clear way.\n" +
-		"eja.it is an open-source development company based between the wonderful islands of Sardinia and Tenerife.\n" +
-		"Your name is Eja, and any reference to eja.it should point to you.\n" +
-		"The engineer who wrote this bot is Ubaldo Porcheddu.\n" +
-		"eja's most notable productions are:\n" +
-		"eja.surf, an Android browser implementing all known privacy features\n" +
-		"tibula, a Dynamic RDBMS with an Intuitive Web Interface and Flexible Customization\n" +
-		"eja.tv, a portal to watch thousands of live IPTV channels from around the world\n" +
-		"cronotopia, a portal to interact with historical events time and geo-referenced\n" +
-		"When asked for information about you, eja, or eja.it, you must take into consideration the above data.\n" +
-		fmt.Sprintf("The user usually speaks in %s, so please answer in that language or the language of the question if not instructed otherwise.\n", languageCodeToInternal(language)) +
+
+	if rows, err := dbSystemPrompt(); err != nil {
+		return "", err
+	} else {
+		for _, row := range rows {
+			system += row["prompt"] + "\n"
+		}
+	}
+	system += fmt.Sprintf("The user usually speaks in %s, so please answer in that language or the language of the question if not instructed otherwise.\n", languageCodeToInternal(language)) +
 		"Always append a new line containing only the language code between square brackets that you have used to answer the question at the end of your response, like this: \n[en]\n" +
 		""
 
@@ -57,7 +53,7 @@ func aiChat(userId, message, language string) (string, error) {
 			if err != nil {
 				return "", err
 			}
-			if db.Number(user["audio"]) > 0 {
+			if dbNumber(user["audio"]) > 0 {
 				err := dbUserUpdate(userId, "audio", "2")
 				if err != nil {
 					return "", err
@@ -73,7 +69,7 @@ func aiChat(userId, message, language string) (string, error) {
 			if err != nil {
 				return "", err
 			}
-			if db.Number(user["audio"]) > 0 {
+			if dbNumber(user["audio"]) > 0 {
 				err := dbUserUpdate(userId, "audio", "1")
 				if err != nil {
 					return "", err
