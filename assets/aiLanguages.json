@@ -107,21 +107,21 @@
       "code": "it",
       "default_language": "0",
       "internal": "italian",
-      "locale": "it_IT",
+      "locale": "it-IT",
       "native": "italiano"
     },
     {
       "code": "es",
       "default_language": "0",
       "internal": "spanish",
-      "locale": "es_ES",
+      "locale": "es-ES",
       "native": "español"
     },
     {
       "code": "en",
       "default_language": "1",
       "internal": "english",
-      "locale": "en_GB",
+      "locale": "en-GB",
       "native": "english"
     }
   ]
