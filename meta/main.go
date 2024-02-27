@@ -1,11 +1,14 @@
 // Copyright (C) 2023-2024 by Ubaldo Porcheddu <ubaldo@eja.it>
 
-package main
+package meta
 
 import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/eja/chat/internal/core"
+	"github.com/eja/chat/internal/ff"
+	"github.com/eja/chat/internal/log"
 	"io"
 	"io/ioutil"
 	"mime/multipart"
@@ -32,7 +35,7 @@ func metaRequest(method string, url string, body interface{}, contentType string
 		return nil, fmt.Errorf("creating request: %w", err)
 	}
 
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", Options.MetaAuth))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", core.Options.MetaAuth))
 	if contentType == "json" {
 		req.Header.Set("Content-Type", "application/json")
 	}
@@ -60,7 +63,7 @@ func metaRequest(method string, url string, body interface{}, contentType string
 }
 
 func metaPost(data interface{}) error {
-	url := fmt.Sprintf("%s/%s/messages", Options.MetaUrl, Options.MetaUser)
+	url := fmt.Sprintf("%s/%s/messages", core.Options.MetaUrl, core.Options.MetaUser)
 	_, err := metaRequest("POST", url, data, "json")
 	return err
 }
@@ -69,8 +72,8 @@ func metaGet(url string) ([]byte, error) {
 	return metaRequest("GET", url, nil, "")
 }
 
-func metaMediaGet(mediaId string, fileName string) error {
-	url := fmt.Sprintf("%s/%s/", Options.MetaUrl, mediaId)
+func MediaGet(mediaId string, fileName string) error {
+	url := fmt.Sprintf("%s/%s/", core.Options.MetaUrl, mediaId)
 
 	responseData, err := metaGet(url)
 	if err != nil {
@@ -92,7 +95,7 @@ func metaMediaGet(mediaId string, fileName string) error {
 		return fmt.Errorf("writing file: %w", err)
 	}
 
-	logTrace("meta media content saved to: %s", fileName)
+	log.Trace("meta media content saved to: %s", fileName)
 	return nil
 }
 
@@ -125,7 +128,7 @@ func metaMediaUpload(fileName string, fileType string) (mediaId string, err erro
 
 	responseData, err := metaRequest(
 		"POST",
-		fmt.Sprintf("%s/%s/media", Options.MetaUrl, Options.MetaUser),
+		fmt.Sprintf("%s/%s/media", core.Options.MetaUrl, core.Options.MetaUser),
 		body,
 		contentType,
 	)
@@ -140,11 +143,11 @@ func metaMediaUpload(fileName string, fileType string) (mediaId string, err erro
 		return "", fmt.Errorf("parsing response: %w", err)
 	}
 
-	logTrace("meta media upload %s %s\n", fileName, fileType)
+	log.Trace("meta media upload %s %s\n", fileName, fileType)
 	return response.ID, nil
 }
 
-func metaSendText(phone string, text string) error {
+func SendText(phone string, text string) error {
 	messageData := map[string]interface{}{
 		"messaging_product": "whatsapp",
 		"preview_url":       false,
@@ -159,7 +162,7 @@ func metaSendText(phone string, text string) error {
 	return metaPost(messageData)
 }
 
-func metaSendStatus(messageId string, status string) error {
+func SendStatus(messageId string, status string) error {
 	statusData := map[string]interface{}{
 		"messaging_product": "whatsapp",
 		"message_id":        messageId,
@@ -184,18 +187,18 @@ func metaReaction(recipient string, messageId string, emoji string) error {
 	return metaPost(reactionData)
 }
 
-func metaSendAudio(phone string, mediaFile string) error {
-	mediaPath := filepath.Join(Options.MediaPath, phone)
+func SendAudio(phone string, mediaFile string) error {
+	mediaPath := filepath.Join(core.Options.MediaPath, phone)
 	fileAudioOutput := mediaPath + ".audio.meta.out"
 
-	probeOutput, err := ffprobeAudio(mediaFile)
+	probeOutput, err := ff.ProbeAudio(mediaFile)
 	if err != nil {
 		return fmt.Errorf("probing audio: %w", err)
 	}
 	if probeOutput["codecName"] == "opus" && probeOutput["sampleRate"] == "48000" && probeOutput["channelLayout"] == "mono" {
 		fileAudioOutput = mediaFile
 	} else {
-		err = ffmpegAudioMeta(mediaFile, fileAudioOutput)
+		err = ff.MpegAudioMeta(mediaFile, fileAudioOutput)
 		if err != nil {
 			return fmt.Errorf("converting audio: %w", err)
 		}

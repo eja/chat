@@ -1,11 +1,12 @@
 // Copyright (C) 2023-2024 by Ubaldo Porcheddu <ubaldo@eja.it>
 
-package main
+package telegram
 
 import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/eja/chat/internal/core"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -17,8 +18,8 @@ type typeTelegramMediaData struct {
 	Result map[string]interface{} `json:"result"`
 }
 
-func telegramSendText(chatId string, text string) error {
-	sendMessageURL := fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage", Options.TelegramToken)
+func SendText(chatId string, text string) error {
+	sendMessageURL := fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage", core.Options.TelegramToken)
 
 	payload := map[string]string{
 		"chat_id": chatId,
@@ -39,8 +40,8 @@ func telegramSendText(chatId string, text string) error {
 	return nil
 }
 
-func telegramMediaGet(fileId string, fileName string) error {
-	getFileURL := fmt.Sprintf("https://api.telegram.org/bot%s/getFile?file_id=%s", Options.TelegramToken, fileId)
+func MediaGet(fileId string, fileName string) error {
+	getFileURL := fmt.Sprintf("https://api.telegram.org/bot%s/getFile?file_id=%s", core.Options.TelegramToken, fileId)
 
 	resp, err := http.Get(getFileURL)
 	if err != nil {
@@ -59,7 +60,7 @@ func telegramMediaGet(fileId string, fileName string) error {
 			return fmt.Errorf("failed to retrieve file path")
 		}
 
-		fileURL := fmt.Sprintf("https://api.telegram.org/file/bot%s/%s", Options.TelegramToken, filePath)
+		fileURL := fmt.Sprintf("https://api.telegram.org/file/bot%s/%s", core.Options.TelegramToken, filePath)
 
 		fileResponse, err := http.Get(fileURL)
 		if err != nil {
@@ -84,8 +85,8 @@ func telegramMediaGet(fileId string, fileName string) error {
 	return nil
 }
 
-func telegramSendAudio(chatId string, fileName string, caption string) error {
-	sendVoiceURL := fmt.Sprintf("https://api.telegram.org/bot%s/sendVoice", Options.TelegramToken)
+func SendAudio(chatId string, fileName string, caption string) error {
+	sendVoiceURL := fmt.Sprintf("https://api.telegram.org/bot%s/sendVoice", core.Options.TelegramToken)
 
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)

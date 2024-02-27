@@ -1,9 +1,10 @@
 // Copyright (C) 2023-2024 by Ubaldo Porcheddu <ubaldo@eja.it>
 
-package main
+package log
 
 import (
 	"fmt"
+	"github.com/eja/chat/internal/core"
 	"log"
 	"regexp"
 )
@@ -37,27 +38,27 @@ func logMessage(level int, args ...interface{}) {
 		}
 		msg += fmt.Sprintf(" %v", arg)
 	}
-	if level <= Options.LogLevel {
+	if level <= core.Options.LogLevel {
 		log.Println(msg)
 	}
 }
 
-func logError(args ...interface{}) {
+func Error(args ...interface{}) {
 	logMessage(logLevelError, args...)
 }
 
-func logWarn(args ...interface{}) {
+func Warn(args ...interface{}) {
 	logMessage(logLevelWarn, args...)
 }
 
-func logInfo(args ...interface{}) {
+func Info(args ...interface{}) {
 	logMessage(logLevelInfo, args...)
 }
 
-func logDebug(args ...interface{}) {
+func Debug(args ...interface{}) {
 	logMessage(logLevelDebug, args...)
 }
 
-func logTrace(args ...interface{}) {
+func Trace(args ...interface{}) {
 	logMessage(logLevelTrace, args...)
 }

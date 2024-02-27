@@ -1,6 +1,6 @@
 // Copyright (C) 2023-2024 by Ubaldo Porcheddu <ubaldo@eja.it>
 
-package main
+package i18n
 
 import (
 	"github.com/eja/tibula/db"
@@ -15,7 +15,7 @@ func defaultLanguage() string {
 	return language
 }
 
-func translate(language string, label string) string {
+func Translate(language string, label string) string {
 	if language == "" {
 		language = defaultLanguage()
 	}
@@ -27,7 +27,7 @@ func translate(language string, label string) string {
 	}
 }
 
-func languageCodeToLocale(language string) string {
+func LanguageCodeToLocale(language string) string {
 	if language == "" {
 		language = defaultLanguage()
 	}
@@ -39,7 +39,7 @@ func languageCodeToLocale(language string) string {
 	}
 }
 
-func languageCodeToInternal(language string) string {
+func LanguageCodeToInternal(language string) string {
 	if language == "" {
 		language = defaultLanguage()
 	}

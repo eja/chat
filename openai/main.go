@@ -1,9 +1,10 @@
-package main
+package openai
 
 import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/eja/chat/internal/core"
 	"net/http"
 )
 
@@ -14,18 +15,18 @@ type typeOpenaiResponse struct {
 	Model   string `json:"model"`
 	Choices []struct {
 		Index        int `json:"index"`
-		Message      typeOpenaiMessage
+		Message      TypeMessage
 		Logprobs     interface{} `json:"logprobs"`
 		FinishReason string      `json:"finish_reason"`
 	} `json:"choices"`
 }
 
-type typeOpenaiMessage struct {
+type TypeMessage struct {
 	Role    string `json:"role"`
 	Content string `json:"content"`
 }
 
-func openaiRequest(model string, messages []typeOpenaiMessage) (string, error) {
+func Request(model string, messages []TypeMessage) (string, error) {
 	url := "https://api.openai.com/v1/chat/completions"
 
 	// Define the request payload
@@ -45,7 +46,7 @@ func openaiRequest(model string, messages []typeOpenaiMessage) (string, error) {
 
 	// Set headers
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer "+Options.OpenaiToken)
+	req.Header.Set("Authorization", "Bearer "+core.Options.OpenaiToken)
 
 	// Make the request
 	client := &http.Client{}

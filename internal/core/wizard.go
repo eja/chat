@@ -1,6 +1,6 @@
 // Copyright (C) 2023-2024 by Ubaldo Porcheddu <ubaldo@eja.it>
 
-package main
+package core
 
 import (
 	"embed"
@@ -11,7 +11,7 @@ import (
 //go:embed all:assets
 var chatDbAssets embed.FS
 
-func chatWizard() error {
+func Wizard() error {
 	configFile := sys.Options.ConfigFile
 	if err := sys.ConfigRead(configFile, &Options); err != nil {
 		return err

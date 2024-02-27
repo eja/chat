@@ -19,7 +19,7 @@ test:
 	@go test -v ./test
 
 chat:
-	@go build -ldflags "-s -w" -o chat ./...
+	@go build -ldflags "-s -w" -o chat cmd/chat/main.go
 	@strip chat
 
 release-dry-run:

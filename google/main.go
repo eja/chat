@@ -1,10 +1,12 @@
 // Copyright (C) 2023-2024 by Ubaldo Porcheddu <ubaldo@eja.it>
 
-package main
+package google
 
 import (
 	"context"
 	"io/ioutil"
+
+	"github.com/eja/chat/internal/core"
 
 	speech "cloud.google.com/go/speech/apiv1"
 	texttospeech "cloud.google.com/go/texttospeech/apiv1"
@@ -13,7 +15,7 @@ import (
 	texttospeechpb "google.golang.org/genproto/googleapis/cloud/texttospeech/v1"
 )
 
-func googleASR(fileName string, language string) (string, error) {
+func ASR(fileName string, language string) (string, error) {
 	ctx := context.Background()
 
 	data, err := ioutil.ReadFile(fileName)
@@ -21,7 +23,7 @@ func googleASR(fileName string, language string) (string, error) {
 		return "", err
 	}
 
-	client, err := speech.NewClient(ctx, option.WithCredentialsFile(Options.GoogleCredentials))
+	client, err := speech.NewClient(ctx, option.WithCredentialsFile(core.Options.GoogleCredentials))
 	if err != nil {
 		return "", err
 	}
@@ -57,10 +59,10 @@ func googleASR(fileName string, language string) (string, error) {
 	return transcript, nil
 }
 
-func googleTTS(fileName string, text string, language string) error {
+func TTS(fileName string, text string, language string) error {
 	ctx := context.Background()
 
-	client, err := texttospeech.NewClient(ctx, option.WithCredentialsFile(Options.GoogleCredentials))
+	client, err := texttospeech.NewClient(ctx, option.WithCredentialsFile(core.Options.GoogleCredentials))
 	if err != nil {
 		return err
 	}

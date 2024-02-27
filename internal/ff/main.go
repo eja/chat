@@ -1,48 +1,49 @@
 // Copyright (C) 2023-2024 by Ubaldo Porcheddu <ubaldo@eja.it>
 
-package main
+package ff
 
 import (
 	"encoding/json"
+	"github.com/eja/chat/internal/log"
 	"os/exec"
 )
 
 func ffmpeg(args []string) error {
 	baseArgs := []string{"-y", "-nostdin", "-hide_banner"}
 	cmd := exec.Command("ffmpeg", append(baseArgs, args...)...)
-	logTrace("ffmpeg", args)
+	log.Trace("ffmpeg", args)
 	return cmd.Run()
 }
 
 func ffprobe(args []string) ([]byte, error) {
 	baseArgs := []string{"-y", "-nostdin", "-hide_banner", "-v", "error"}
 	cmd := exec.Command("ffprobe", append(baseArgs, args...)...)
-	logTrace("ffprobe", args)
+	log.Trace("ffprobe", args)
 	return cmd.Output()
 }
 
-func ffmpegAudioGoogle(fileIn string, fileOut string) error {
+func MpegAudioGoogle(fileIn string, fileOut string) error {
 	return ffmpeg([]string{
 		"-i", fileIn,
 		"-vn", "-ar", "48000", "-ac", "1", "-c:a", "libopus", "-f", "ogg", fileOut,
 	})
 }
 
-func ffmpegAudioMeta(fileIn string, fileOut string) error {
+func MpegAudioMeta(fileIn string, fileOut string) error {
 	return ffmpeg([]string{
 		"-i", fileIn,
 		"-vn", "-ar", "48000", "-b:a", "12k", "-ac", "1", "-c:a", "libopus", "-f", "ogg", fileOut,
 	})
 }
 
-func ffmpegAudioWhisper(fileIn string, fileOut string) error {
+func MpegAudioWhisper(fileIn string, fileOut string) error {
 	return ffmpeg([]string{
 		"-i", fileIn,
 		"-ar", "16000", "-ac", "1", "-c:a", "pcm_s16le", "-f", "wav", fileOut,
 	})
 }
 
-func ffprobeAudio(file string) (map[string]interface{}, error) {
+func ProbeAudio(file string) (map[string]interface{}, error) {
 	output, err := ffprobe([]string{
 		"-print_format", "json", "-show_format", "-show_streams", file,
 	})
