@@ -1,16 +1,17 @@
 // Copyright (C) 2023-2024 by Ubaldo Porcheddu <ubaldo@eja.it>
 
-package router
+package web
 
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
+
 	"github.com/eja/chat/internal/db"
 	"github.com/eja/chat/internal/i18n"
 	"github.com/eja/chat/internal/log"
 	"github.com/eja/chat/internal/process"
-	"github.com/eja/chat/telegram"
-	"net/http"
+	"github.com/eja/chat/internal/telegram"
 )
 
 type typeTelegramMessage struct {

@@ -7,7 +7,7 @@ import (
 	"github.com/eja/chat/internal/db"
 	"github.com/eja/chat/internal/i18n"
 	"github.com/eja/chat/internal/log"
-	"github.com/eja/chat/openai"
+	"github.com/eja/chat/internal/openai"
 	"regexp"
 	"strings"
 	"time"
@@ -22,7 +22,7 @@ var historyInit bool
 
 type typeAiMessage = openai.TypeMessage
 
-func aiChat(userId, message, language string) (string, error) {
+func Chat(userId, message, language string) (string, error) {
 	log.Trace(userId, message, language)
 	if !historyInit {
 		history = make(map[string][]typeAiMessage)

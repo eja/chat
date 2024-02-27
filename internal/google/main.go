@@ -6,7 +6,7 @@ import (
 	"context"
 	"io/ioutil"
 
-	"github.com/eja/chat/internal/core"
+	"github.com/eja/chat/internal/sys"
 
 	speech "cloud.google.com/go/speech/apiv1"
 	texttospeech "cloud.google.com/go/texttospeech/apiv1"
@@ -23,7 +23,7 @@ func ASR(fileName string, language string) (string, error) {
 		return "", err
 	}
 
-	client, err := speech.NewClient(ctx, option.WithCredentialsFile(core.Options.GoogleCredentials))
+	client, err := speech.NewClient(ctx, option.WithCredentialsFile(sys.Options.GoogleCredentials))
 	if err != nil {
 		return "", err
 	}
@@ -62,7 +62,7 @@ func ASR(fileName string, language string) (string, error) {
 func TTS(fileName string, text string, language string) error {
 	ctx := context.Background()
 
-	client, err := texttospeech.NewClient(ctx, option.WithCredentialsFile(core.Options.GoogleCredentials))
+	client, err := texttospeech.NewClient(ctx, option.WithCredentialsFile(sys.Options.GoogleCredentials))
 	if err != nil {
 		return err
 	}

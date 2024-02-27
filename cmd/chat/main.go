@@ -3,43 +3,45 @@
 package main
 
 import (
-	"github.com/eja/chat/internal/core"
-	"github.com/eja/chat/internal/router"
-	"github.com/eja/tibula/sys"
-	"github.com/eja/tibula/web"
 	"log"
+
+	chatSys "github.com/eja/chat/internal/sys"
+	chatWeb "github.com/eja/chat/internal/web"
+
+	tibulaSys "github.com/eja/tibula/sys"
+	tibulaWeb "github.com/eja/tibula/web"
 )
 
 func main() {
 	log.SetFlags(0)
-	if err := core.Configure(); err != nil {
+	if err := chatSys.Configure(); err != nil {
 		log.Fatal(err)
 	}
 
-	if sys.Commands.DbSetup {
-		log.Println(sys.Options)
-		if err := sys.Setup(); err != nil {
+	if tibulaSys.Commands.DbSetup {
+		log.Println(tibulaSys.Options)
+		if err := tibulaSys.Setup(); err != nil {
 			log.Fatal(err)
 		}
-	} else if sys.Commands.Wizard {
-		if err := sys.WizardSetup(); err != nil {
+	} else if tibulaSys.Commands.Wizard {
+		if err := tibulaSys.WizardSetup(); err != nil {
 			log.Fatal(err)
 		}
-		if err := core.Wizard(); err != nil {
+		if err := chatSys.Wizard(); err != nil {
 			log.Fatal(err)
 		}
 
-	} else if sys.Commands.Start {
-		if core.Options.DbName == "" {
+	} else if tibulaSys.Commands.Start {
+		if chatSys.Options.DbName == "" {
 			log.Fatal("Database name/file is mandatory.")
 		}
-		if err := router.Router(); err != nil {
+		if err := chatWeb.Router(); err != nil {
 			log.Fatal(err)
 		}
-		if err := web.Start(); err != nil {
+		if err := tibulaWeb.Start(); err != nil {
 			log.Fatal("Cannot start the web service: ", err)
 		}
 	} else {
-		core.Help()
+		chatSys.Help()
 	}
 }

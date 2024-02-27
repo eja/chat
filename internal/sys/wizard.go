@@ -1,9 +1,10 @@
 // Copyright (C) 2023-2024 by Ubaldo Porcheddu <ubaldo@eja.it>
 
-package core
+package sys
 
 import (
 	"embed"
+
 	"github.com/eja/tibula/db"
 	"github.com/eja/tibula/sys"
 )

@@ -3,4 +3,6 @@ chat.exe
 chat.json
 tibula.db
 
+dist/
+
 !cmd/chat

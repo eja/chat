@@ -4,14 +4,15 @@ package process
 
 import (
 	"fmt"
-	"github.com/eja/chat/google"
-	"github.com/eja/chat/internal/core"
+	"regexp"
+
 	"github.com/eja/chat/internal/db"
 	"github.com/eja/chat/internal/ff"
+	"github.com/eja/chat/internal/google"
 	"github.com/eja/chat/internal/i18n"
-	"github.com/eja/chat/meta"
-	"github.com/eja/chat/telegram"
-	"regexp"
+	"github.com/eja/chat/internal/meta"
+	"github.com/eja/chat/internal/sys"
+	"github.com/eja/chat/internal/telegram"
 )
 
 const maxAudioInputTime = 60
@@ -30,7 +31,7 @@ func Language(response string, language string) (string, string) {
 }
 
 func Text(userId string, language string, text string) (string, error) {
-	response, err := aiChat(userId, text, language)
+	response, err := Chat(userId, text, language)
 	if err == nil {
 		response, _ = Language(response, language)
 	}
@@ -39,7 +40,7 @@ func Text(userId string, language string, text string) (string, error) {
 
 func Audio(platform string, userId string, language string, chatId string, mediaId string, tts bool) (string, error) {
 	var response string
-	mediaPath := fmt.Sprintf("%s/%s", core.Options.MediaPath, mediaId)
+	mediaPath := fmt.Sprintf("%s/%s", sys.Options.MediaPath, mediaId)
 
 	fileAudioInput := mediaPath + ".original.audio.in"
 	if platform == "meta" {
@@ -76,7 +77,7 @@ func Audio(platform string, userId string, language string, chatId string, media
 		return "", err
 	}
 
-	response, err = aiChat(userId, transcript, language)
+	response, err = Chat(userId, transcript, language)
 	if err != nil {
 		return "", err
 	}

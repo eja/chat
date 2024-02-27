@@ -4,8 +4,9 @@ package db
 
 import (
 	"fmt"
+
+	"github.com/eja/chat/internal/sys"
 	"github.com/eja/tibula/db"
-	"github.com/eja/tibula/sys"
 )
 
 func Number(value interface{}) int64 {

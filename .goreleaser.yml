@@ -5,9 +5,9 @@ before:
     - apt-get install -y gcc-multilib
 
 builds:
-  - id: "tibula-darwin-amd64"
-    main: ./cmd/tibula
-    binary: tibula
+  - id: "chat-darwin-amd64"
+    main: ./cmd/chat
+    binary: chat
     env:
       - CGO_ENABLED=1
       - CC=o64-clang
@@ -20,9 +20,9 @@ builds:
       - -tags=cgo
     ldflags:
       - -s -w 
-  - id: "tibula-darwin-arm64"
-    main: ./cmd/tibula
-    binary: tibula
+  - id: "chat-darwin-arm64"
+    main: ./cmd/chat
+    binary: chat
     env:
       - CGO_ENABLED=1
       - CC=oa64-clang
@@ -35,9 +35,9 @@ builds:
       - -tags=cgo
     ldflags:
       - -s -w 
-  - id: "tibula-linux-amd64"
-    main: ./cmd/tibula
-    binary: tibula
+  - id: "chat-linux-amd64"
+    main: ./cmd/chat
+    binary: chat
     env:
       - CGO_ENABLED=1
       - CC=gcc
@@ -50,9 +50,9 @@ builds:
       - -tags=cgo
     ldflags:
       - -s -w -extldflags "-static"
-  - id: "tibula-linux-i386"
-    main: ./cmd/tibula
-    binary: tibula
+  - id: "chat-linux-i386"
+    main: ./cmd/chat
+    binary: chat
     env:
       - CGO_ENABLED=1
       - CC=gcc
@@ -65,9 +65,9 @@ builds:
       - -tags=cgo -m32
     ldflags:
       - -s -w -extldflags "-static"
-  - id: "tibula-linux-armhf"
-    main: ./cmd/tibula
-    binary: tibula
+  - id: "chat-linux-armhf"
+    main: ./cmd/chat
+    binary: chat
     goos:
       - linux
     goarch:
@@ -85,9 +85,9 @@ builds:
       - -mod=readonly
     ldflags:
       - -s -w -extldflags "-static"
-  - id: "tibula-linux-arm64"
-    main: ./cmd/tibula
-    binary: tibula
+  - id: "chat-linux-arm64"
+    main: ./cmd/chat
+    binary: chat
     env:
       - CGO_ENABLED=1
       - CC=aarch64-linux-gnu-gcc
@@ -100,9 +100,9 @@ builds:
       - -tags=cgo
     ldflags:
       - -s -w -extldflags "-static"
-  - id: "tibula-windows-amd64"
-    main: ./cmd/tibula
-    binary: tibula
+  - id: "chat-windows-amd64"
+    main: ./cmd/chat
+    binary: chat
     env:
       - CGO_ENABLED=1
       - CC=x86_64-w64-mingw32-gcc
@@ -116,9 +116,9 @@ builds:
       - -buildmode=exe
     ldflags:
       - -s -w 
-  - id: "tibula-windows-arm64"
-    main: ./cmd/tibula
-    binary: tibula
+  - id: "chat-windows-arm64"
+    main: ./cmd/chat
+    binary: chat
     goos:
       - windows
     goarch:
@@ -138,14 +138,14 @@ archives:
       - goos: windows
         format: zip
     builds:
-      - tibula-darwin-amd64
-      - tibula-darwin-arm64
-      - tibula-linux-amd64
-      - tibula-linux-arm64
-      - tibula-linux-armhf
-      - tibula-linux-i386
-      - tibula-windows-amd64
-      - tibula-windows-arm64
+      - chat-darwin-amd64
+      - chat-darwin-arm64
+      - chat-linux-amd64
+      - chat-linux-arm64
+      - chat-linux-armhf
+      - chat-linux-i386
+      - chat-windows-amd64
+      - chat-windows-arm64
 
 checksum:
   name_template: 'checksums.txt'

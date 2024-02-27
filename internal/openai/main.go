@@ -4,8 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/eja/chat/internal/core"
 	"net/http"
+
+	"github.com/eja/chat/internal/sys"
 )
 
 type typeOpenaiResponse struct {
@@ -46,7 +47,7 @@ func Request(model string, messages []TypeMessage) (string, error) {
 
 	// Set headers
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer "+core.Options.OpenaiToken)
+	req.Header.Set("Authorization", "Bearer "+sys.Options.OpenaiToken)
 
 	// Make the request
 	client := &http.Client{}

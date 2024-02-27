@@ -4,8 +4,9 @@ package ff
 
 import (
 	"encoding/json"
-	"github.com/eja/chat/internal/log"
 	"os/exec"
+
+	"github.com/eja/chat/internal/log"
 )
 
 func ffmpeg(args []string) error {

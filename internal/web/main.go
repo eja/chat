@@ -1,6 +1,6 @@
 // Copyright (C) 2023-2024 by Ubaldo Porcheddu <ubaldo@eja.it>
 
-package router
+package web
 
 import (
 	"github.com/eja/tibula/web"

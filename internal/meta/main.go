@@ -6,9 +6,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/eja/chat/internal/core"
-	"github.com/eja/chat/internal/ff"
-	"github.com/eja/chat/internal/log"
 	"io"
 	"io/ioutil"
 	"mime/multipart"
@@ -16,6 +13,10 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/eja/chat/internal/ff"
+	"github.com/eja/chat/internal/log"
+	"github.com/eja/chat/internal/sys"
 )
 
 func metaRequest(method string, url string, body interface{}, contentType string) ([]byte, error) {
@@ -35,7 +36,7 @@ func metaRequest(method string, url string, body interface{}, contentType string
 		return nil, fmt.Errorf("creating request: %w", err)
 	}
 
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", core.Options.MetaAuth))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", sys.Options.MetaAuth))
 	if contentType == "json" {
 		req.Header.Set("Content-Type", "application/json")
 	}
@@ -63,7 +64,7 @@ func metaRequest(method string, url string, body interface{}, contentType string
 }
 
 func metaPost(data interface{}) error {
-	url := fmt.Sprintf("%s/%s/messages", core.Options.MetaUrl, core.Options.MetaUser)
+	url := fmt.Sprintf("%s/%s/messages", sys.Options.MetaUrl, sys.Options.MetaUser)
 	_, err := metaRequest("POST", url, data, "json")
 	return err
 }
@@ -73,7 +74,7 @@ func metaGet(url string) ([]byte, error) {
 }
 
 func MediaGet(mediaId string, fileName string) error {
-	url := fmt.Sprintf("%s/%s/", core.Options.MetaUrl, mediaId)
+	url := fmt.Sprintf("%s/%s/", sys.Options.MetaUrl, mediaId)
 
 	responseData, err := metaGet(url)
 	if err != nil {
@@ -128,7 +129,7 @@ func metaMediaUpload(fileName string, fileType string) (mediaId string, err erro
 
 	responseData, err := metaRequest(
 		"POST",
-		fmt.Sprintf("%s/%s/media", core.Options.MetaUrl, core.Options.MetaUser),
+		fmt.Sprintf("%s/%s/media", sys.Options.MetaUrl, sys.Options.MetaUser),
 		body,
 		contentType,
 	)
@@ -188,7 +189,7 @@ func metaReaction(recipient string, messageId string, emoji string) error {
 }
 
 func SendAudio(phone string, mediaFile string) error {
-	mediaPath := filepath.Join(core.Options.MediaPath, phone)
+	mediaPath := filepath.Join(sys.Options.MediaPath, phone)
 	fileAudioOutput := mediaPath + ".audio.meta.out"
 
 	probeOutput, err := ff.ProbeAudio(mediaFile)

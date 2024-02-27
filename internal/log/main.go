@@ -4,9 +4,10 @@ package log
 
 import (
 	"fmt"
-	"github.com/eja/chat/internal/core"
 	"log"
 	"regexp"
+
+	"github.com/eja/chat/internal/sys"
 )
 
 const (
@@ -38,7 +39,7 @@ func logMessage(level int, args ...interface{}) {
 		}
 		msg += fmt.Sprintf(" %v", arg)
 	}
-	if level <= core.Options.LogLevel {
+	if level <= sys.Options.LogLevel {
 		log.Println(msg)
 	}
 }

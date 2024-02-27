@@ -1,16 +1,17 @@
 // Copyright (C) 2023-2024 by Ubaldo Porcheddu <ubaldo@eja.it>
 
-package router
+package web
 
 import (
 	"encoding/json"
-	"github.com/eja/chat/internal/core"
+	"net/http"
+
 	"github.com/eja/chat/internal/db"
 	"github.com/eja/chat/internal/i18n"
 	"github.com/eja/chat/internal/log"
+	"github.com/eja/chat/internal/meta"
 	"github.com/eja/chat/internal/process"
-	"github.com/eja/chat/meta"
-	"net/http"
+	"github.com/eja/chat/internal/sys"
 )
 
 type typeMetaMessage struct {
@@ -40,7 +41,7 @@ func metaRouter(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		hubMode := r.URL.Query().Get("hub.mode")
 		verifyToken := r.URL.Query().Get("hub.verify_token")
-		if hubMode == "subscribe" && verifyToken == core.Options.MetaToken {
+		if hubMode == "subscribe" && verifyToken == sys.Options.MetaToken {
 			w.Write([]byte(r.URL.Query().Get("hub.challenge")))
 		} else {
 			w.WriteHeader(http.StatusBadRequest)

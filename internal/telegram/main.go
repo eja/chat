@@ -6,11 +6,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/eja/chat/internal/core"
 	"io"
 	"mime/multipart"
 	"net/http"
 	"os"
+
+	"github.com/eja/chat/internal/sys"
 )
 
 type typeTelegramMediaData struct {
@@ -19,7 +20,7 @@ type typeTelegramMediaData struct {
 }
 
 func SendText(chatId string, text string) error {
-	sendMessageURL := fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage", core.Options.TelegramToken)
+	sendMessageURL := fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage", sys.Options.TelegramToken)
 
 	payload := map[string]string{
 		"chat_id": chatId,
@@ -41,7 +42,7 @@ func SendText(chatId string, text string) error {
 }
 
 func MediaGet(fileId string, fileName string) error {
-	getFileURL := fmt.Sprintf("https://api.telegram.org/bot%s/getFile?file_id=%s", core.Options.TelegramToken, fileId)
+	getFileURL := fmt.Sprintf("https://api.telegram.org/bot%s/getFile?file_id=%s", sys.Options.TelegramToken, fileId)
 
 	resp, err := http.Get(getFileURL)
 	if err != nil {
@@ -60,7 +61,7 @@ func MediaGet(fileId string, fileName string) error {
 			return fmt.Errorf("failed to retrieve file path")
 		}
 
-		fileURL := fmt.Sprintf("https://api.telegram.org/file/bot%s/%s", core.Options.TelegramToken, filePath)
+		fileURL := fmt.Sprintf("https://api.telegram.org/file/bot%s/%s", sys.Options.TelegramToken, filePath)
 
 		fileResponse, err := http.Get(fileURL)
 		if err != nil {
@@ -86,7 +87,7 @@ func MediaGet(fileId string, fileName string) error {
 }
 
 func SendAudio(chatId string, fileName string, caption string) error {
-	sendVoiceURL := fmt.Sprintf("https://api.telegram.org/bot%s/sendVoice", core.Options.TelegramToken)
+	sendVoiceURL := fmt.Sprintf("https://api.telegram.org/bot%s/sendVoice", sys.Options.TelegramToken)
 
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)

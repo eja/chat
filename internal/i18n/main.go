@@ -3,8 +3,8 @@
 package i18n
 
 import (
+	"github.com/eja/chat/internal/sys"
 	"github.com/eja/tibula/db"
-	"github.com/eja/tibula/sys"
 )
 
 func defaultLanguage() string {
