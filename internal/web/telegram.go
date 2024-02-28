@@ -9,9 +9,9 @@ import (
 
 	"github.com/eja/chat/internal/db"
 	"github.com/eja/chat/internal/i18n"
-	"github.com/eja/chat/internal/log"
 	"github.com/eja/chat/internal/process"
 	"github.com/eja/chat/internal/telegram"
+	"github.com/eja/tibula/log"
 )
 
 type typeTelegramMessage struct {
@@ -46,11 +46,11 @@ func telegramRouter(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			errMessage := "Error decoding request body"
 			http.Error(w, errMessage, http.StatusBadRequest)
-			log.Warn(errMessage)
+			log.Warn("[TG]", errMessage)
 			return
 		}
 
-		log.Trace("TG incoming message", telegramMessage)
+		log.Trace("[TG]", "incoming message", telegramMessage)
 		userId := fmt.Sprintf("TG.%d", telegramMessage.Message.From.Id)
 		chatId := fmt.Sprintf("%d", telegramMessage.Message.Chat.Id)
 		chatLanguage := telegramMessage.Message.From.LanguageCode
@@ -69,13 +69,13 @@ func telegramRouter(w http.ResponseWriter, r *http.Request) {
 				response, err := process.Text(userId, user["language"], text)
 				if err != nil {
 					response = i18n.Translate(user["language"], "error")
-					log.Warn("TG", userId, chatId, err)
+					log.Warn("[TG]", userId, chatId, err)
 				}
 				if err := telegram.SendText(
 					chatId,
 					response,
 				); err != nil {
-					log.Warn("TG", userId, chatId, err)
+					log.Warn("[TG]", userId, chatId, err)
 				}
 			}
 
@@ -90,9 +90,9 @@ func telegramRouter(w http.ResponseWriter, r *http.Request) {
 						db.Number(user["audio"]) > 1,
 					)
 					if err != nil {
-						log.Warn("TG", userId, chatId, err)
+						log.Warn("[TG]", userId, chatId, err)
 						if err := telegram.SendText(chatId, i18n.Translate(chatLanguage, "error")); err != nil {
-							log.Warn("TG", userId, chatId, err)
+							log.Warn("[TG]", userId, chatId, err)
 						}
 					}
 				} else {
@@ -100,13 +100,13 @@ func telegramRouter(w http.ResponseWriter, r *http.Request) {
 						chatId,
 						i18n.Translate(user["language"], "audio_disabled"),
 					); err != nil {
-						log.Warn("TG", userId, chatId, err)
+						log.Warn("[TG]", userId, chatId, err)
 					}
 				}
 			}
 		} else {
 			if err := telegram.SendText(chatId, i18n.Translate(chatLanguage, "user_unknown")); err != nil {
-				log.Warn("TG", userId, chatId, err)
+				log.Warn("[TG]", userId, chatId, err)
 			}
 		}
 	}

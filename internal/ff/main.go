@@ -6,20 +6,20 @@ import (
 	"encoding/json"
 	"os/exec"
 
-	"github.com/eja/chat/internal/log"
+	"github.com/eja/tibula/log"
 )
 
 func ffmpeg(args []string) error {
 	baseArgs := []string{"-y", "-nostdin", "-hide_banner"}
 	cmd := exec.Command("ffmpeg", append(baseArgs, args...)...)
-	log.Trace("ffmpeg", args)
+	log.Trace("[FF]", "ffmpeg", args)
 	return cmd.Run()
 }
 
 func ffprobe(args []string) ([]byte, error) {
 	baseArgs := []string{"-y", "-nostdin", "-hide_banner", "-v", "error"}
 	cmd := exec.Command("ffprobe", append(baseArgs, args...)...)
-	log.Trace("ffprobe", args)
+	log.Trace("[FF]", "ffprobe", args)
 	return cmd.Output()
 }
 

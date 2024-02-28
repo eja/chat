@@ -15,8 +15,8 @@ import (
 	"strings"
 
 	"github.com/eja/chat/internal/ff"
-	"github.com/eja/chat/internal/log"
 	"github.com/eja/chat/internal/sys"
+	"github.com/eja/tibula/log"
 )
 
 func metaRequest(method string, url string, body interface{}, contentType string) ([]byte, error) {
@@ -96,7 +96,7 @@ func MediaGet(mediaId string, fileName string) error {
 		return fmt.Errorf("writing file: %w", err)
 	}
 
-	log.Trace("meta media content saved to: %s", fileName)
+	log.Trace("[FB]", "media content saved to: %s", fileName)
 	return nil
 }
 
@@ -144,7 +144,7 @@ func metaMediaUpload(fileName string, fileType string) (mediaId string, err erro
 		return "", fmt.Errorf("parsing response: %w", err)
 	}
 
-	log.Trace("meta media upload %s %s\n", fileName, fileType)
+	log.Trace("[FB]", "media upload %s %s\n", fileName, fileType)
 	return response.ID, nil
 }
 

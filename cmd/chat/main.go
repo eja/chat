@@ -3,23 +3,20 @@
 package main
 
 import (
-	"log"
-
 	chatSys "github.com/eja/chat/internal/sys"
 	chatWeb "github.com/eja/chat/internal/web"
 
+	"github.com/eja/tibula/log"
 	tibulaSys "github.com/eja/tibula/sys"
 	tibulaWeb "github.com/eja/tibula/web"
 )
 
 func main() {
-	log.SetFlags(0)
 	if err := chatSys.Configure(); err != nil {
 		log.Fatal(err)
 	}
 
 	if tibulaSys.Commands.DbSetup {
-		log.Println(tibulaSys.Options)
 		if err := tibulaSys.Setup(); err != nil {
 			log.Fatal(err)
 		}

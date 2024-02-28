@@ -8,10 +8,10 @@ import (
 
 	"github.com/eja/chat/internal/db"
 	"github.com/eja/chat/internal/i18n"
-	"github.com/eja/chat/internal/log"
 	"github.com/eja/chat/internal/meta"
 	"github.com/eja/chat/internal/process"
 	"github.com/eja/chat/internal/sys"
+	"github.com/eja/tibula/log"
 )
 
 type typeMetaMessage struct {
@@ -55,11 +55,11 @@ func metaRouter(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			errMessage := "Error decoding request body"
 			http.Error(w, errMessage, http.StatusBadRequest)
-			log.Warn(errMessage)
+			log.Warn("[FB]", errMessage)
 			return
 		}
 
-		log.Trace("FB incoming message", metaMessage)
+		log.Trace("[FB]", "incoming message", metaMessage)
 		if len(metaMessage.Entry) > 0 {
 			changes := metaMessage.Entry[0].Changes
 			if len(changes) > 0 {
@@ -73,7 +73,7 @@ func metaRouter(w http.ResponseWriter, r *http.Request) {
 					user, err := db.UserGet(userId)
 					if err == nil && user != nil {
 						if err := meta.SendStatus(chatId, "read"); err != nil {
-							log.Warn("FB status", userId, chatId, err)
+							log.Warn("[FB]", "status", userId, chatId, err)
 						}
 
 						if db.Number(user["welcome"]) < 1 {
@@ -85,10 +85,10 @@ func metaRouter(w http.ResponseWriter, r *http.Request) {
 							response, err := process.Text(userId, user["language"], message.Text.Body)
 							if err != nil {
 								response = i18n.Translate(user["language"], "error")
-								log.Warn("FB", userId, chatId, err)
+								log.Warn("[FB]", userId, chatId, err)
 							}
 							if err := meta.SendText(userId, response); err != nil {
-								log.Warn("FB", userId, err)
+								log.Warn("[FB]", userId, err)
 							}
 						} else if message.Audio != nil {
 							if db.Number(user["audio"]) > 0 {
@@ -101,20 +101,20 @@ func metaRouter(w http.ResponseWriter, r *http.Request) {
 									db.Number(user["audio"]) > 1,
 								)
 								if err != nil {
-									log.Warn("FB", userId, chatId, err)
+									log.Warn("[FB]", userId, chatId, err)
 									if err := meta.SendText(userId, i18n.Translate(user["language"], "error")); err != nil {
-										log.Warn("FB", userId, chatId, err)
+										log.Warn("[FB]", userId, chatId, err)
 									}
 								}
 							}
 						} else {
 							if err := meta.SendText(userId, i18n.Translate(user["language"], "audio_disabled")); err != nil {
-								log.Warn("FB", userId, chatId, err)
+								log.Warn("[FB]", userId, chatId, err)
 							}
 						}
 					} else {
 						if err := meta.SendText(userId, i18n.Translate("", "user_unknown")); err != nil {
-							log.Warn("FB", userId, chatId, err)
+							log.Warn("[FB]", userId, chatId, err)
 						}
 					}
 				}

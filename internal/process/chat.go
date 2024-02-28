@@ -4,13 +4,14 @@ package process
 
 import (
 	"fmt"
-	"github.com/eja/chat/internal/db"
-	"github.com/eja/chat/internal/i18n"
-	"github.com/eja/chat/internal/log"
-	"github.com/eja/chat/internal/openai"
 	"regexp"
 	"strings"
 	"time"
+
+	"github.com/eja/chat/internal/db"
+	"github.com/eja/chat/internal/i18n"
+	"github.com/eja/chat/internal/openai"
+	"github.com/eja/tibula/log"
 )
 
 const historyTimeout = 300
@@ -23,7 +24,7 @@ var historyInit bool
 type typeAiMessage = openai.TypeMessage
 
 func Chat(userId, message, language string) (string, error) {
-	log.Trace(userId, message, language)
+	log.Trace("[chat]", userId, message, language)
 	if !historyInit {
 		history = make(map[string][]typeAiMessage)
 		historyTime = make(map[string]time.Time)
