@@ -9,7 +9,7 @@ import (
 )
 
 const Name = "chat"
-const Version = "2.2.7"
+const Version = "2.2.28"
 
 var Options typeConfigChat
 
