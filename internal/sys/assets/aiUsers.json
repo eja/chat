@@ -82,7 +82,7 @@
       "name": "audio"
     },
     {
-      "value": "SELECT ejaId,username FROM ejaUsers WHERE (ejaId=@ejaOwner OR ejaOwner IN (SELECT value FROM ejaSessions WHERE name='ejaOwners' AND ejaOwner=@ejaOwner)) ORDER BY username;",
+      "value": "SELECT ejaId,username FROM ejaUsers WHERE ejaId IN (SELECT value FROM ejaSession WHERE ejaSession.name='ejaOwners') ORDER BY username",
       "powerEdit": 0,
       "powerList": 1,
       "type": "sqlMatrix",
