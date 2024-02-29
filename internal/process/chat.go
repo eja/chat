@@ -24,7 +24,7 @@ var historyInit bool
 type typeAiMessage = openai.TypeMessage
 
 func Chat(userId, message, language string) (string, error) {
-	log.Trace("[chat]", userId, message, language)
+	log.Debug("[chat] [in]", userId, message, language)
 	if !historyInit {
 		history = make(map[string][]typeAiMessage)
 		historyTime = make(map[string]time.Time)
@@ -120,6 +120,8 @@ func Chat(userId, message, language string) (string, error) {
 		})
 		response = assistant
 	}
+
+	log.Debug("[chat] [out]", userId, response, language)
 
 	return response, nil
 }

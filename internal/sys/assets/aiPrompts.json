@@ -16,9 +16,7 @@
     "delete",
     "save",
     "search",
-    "list",
-    "link",
-    "unlink"
+    "list"
   ],
   "field": [
     {
