@@ -11,6 +11,7 @@ import (
 	"github.com/eja/chat/internal/google"
 	"github.com/eja/chat/internal/i18n"
 	"github.com/eja/chat/internal/meta"
+	"github.com/eja/chat/internal/openai"
 	"github.com/eja/chat/internal/sys"
 	"github.com/eja/chat/internal/telegram"
 )
@@ -40,6 +41,9 @@ func Text(userId string, language string, text string) (string, error) {
 
 func Audio(platform string, userId string, language string, chatId string, mediaId string, tts bool) (string, error) {
 	var response string
+	var transcript string
+	var err error
+
 	mediaPath := fmt.Sprintf("%s/%s", sys.Options.MediaPath, mediaId)
 
 	fileAudioInput := mediaPath + ".original.audio.in"
@@ -54,27 +58,28 @@ func Audio(platform string, userId string, language string, chatId string, media
 		}
 	}
 
-	fileGoogleInput := mediaPath + ".google.audio.in"
-	probeInput, err := ff.ProbeAudio(fileAudioInput)
-	if err != nil {
-		return "", err
-	}
-	duration := db.Number(probeInput["duration"])
-	if duration > maxAudioInputTime {
-		return i18n.Translate(language, "audio_input_limit"), nil
-	}
-
-	if probeInput["codec_name"] == "STOP" && probeInput["sample_rate"] == "48000" && probeInput["channel_layout"] == "mono" {
-		fileGoogleInput = fileAudioInput
-	} else {
+	if sys.Options.GoogleCredentials != "" {
+		fileGoogleInput := mediaPath + ".google.audio.in"
+		probeInput, err := ff.ProbeAudio(fileAudioInput)
+		if err != nil {
+			return "", err
+		}
+		duration := db.Number(probeInput["duration"])
+		if duration > maxAudioInputTime {
+			return i18n.Translate(language, "audio_input_limit"), nil
+		}
 		if err := ff.MpegAudioGoogle(fileAudioInput, fileGoogleInput); err != nil {
 			return "", err
 		}
-	}
-
-	transcript, err := google.ASR(fileGoogleInput, i18n.LanguageCodeToLocale(language))
-	if err != nil {
-		return "", err
+		transcript, err = google.ASR(fileGoogleInput, i18n.LanguageCodeToLocale(language))
+		if err != nil {
+			return "", err
+		}
+	} else {
+		transcript, err = openai.ASR(fileAudioInput, language)
+		if err != nil {
+			return "", err
+		}
 	}
 
 	response, err = Chat(userId, transcript, language)
@@ -88,18 +93,27 @@ func Audio(platform string, userId string, language string, chatId string, media
 
 	response, ttsLanguage := Language(response, language)
 
-	fileGoogleOutput := mediaPath + ".google.audio.out"
-	if err = google.TTS(fileGoogleOutput, response, i18n.LanguageCodeToLocale(ttsLanguage)); err != nil {
-		return "", err
+	fileAudioOutput := mediaPath + ".audio.out"
+
+	if sys.Options.GoogleCredentials != "" {
+		if err = google.TTS(fileAudioOutput, response, i18n.LanguageCodeToLocale(ttsLanguage)); err != nil {
+			return "", err
+		}
+	} else {
+		if err = openai.TTS(fileAudioOutput, response); err != nil {
+			return "", err
+		}
+
 	}
+
 	if platform == "meta" {
-		if err := meta.SendAudio(userId, fileGoogleOutput); err != nil {
+		if err := meta.SendAudio(userId, fileAudioOutput); err != nil {
 			return "", err
 		}
 		response = ""
 	}
 	if platform == "telegram" {
-		if err := telegram.SendAudio(chatId, fileGoogleOutput, response); err != nil {
+		if err := telegram.SendAudio(chatId, fileAudioOutput, response); err != nil {
 			return "", err
 		}
 		response = ""

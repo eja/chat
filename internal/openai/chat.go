@@ -9,25 +9,25 @@ import (
 	"github.com/eja/chat/internal/sys"
 )
 
-type typeOpenaiResponse struct {
+type typeChatResponse struct {
 	ID      string `json:"id"`
 	Object  string `json:"object"`
 	Created int64  `json:"created"`
 	Model   string `json:"model"`
 	Choices []struct {
 		Index        int `json:"index"`
-		Message      TypeMessage
+		Message      TypeOpenaiChatMessage
 		Logprobs     interface{} `json:"logprobs"`
 		FinishReason string      `json:"finish_reason"`
 	} `json:"choices"`
 }
 
-type TypeMessage struct {
+type TypeOpenaiChatMessage struct {
 	Role    string `json:"role"`
 	Content string `json:"content"`
 }
 
-func Request(model string, messages []TypeMessage) (string, error) {
+func Chat(model string, messages []TypeOpenaiChatMessage) (string, error) {
 	url := "https://api.openai.com/v1/chat/completions"
 
 	// Define the request payload
@@ -58,7 +58,7 @@ func Request(model string, messages []TypeMessage) (string, error) {
 	defer resp.Body.Close()
 
 	// Parse the response
-	var response typeOpenaiResponse
+	var response typeChatResponse
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		return "", fmt.Errorf("Error decoding JSON response: %v", err)
 	}

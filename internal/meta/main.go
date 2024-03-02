@@ -96,7 +96,7 @@ func MediaGet(mediaId string, fileName string) error {
 		return fmt.Errorf("writing file: %w", err)
 	}
 
-	log.Trace("[FB]", "media content saved to: %s", fileName)
+	log.Trace("[FB]", "media content saved to", fileName)
 	return nil
 }
 
@@ -144,7 +144,7 @@ func metaMediaUpload(fileName string, fileType string) (mediaId string, err erro
 		return "", fmt.Errorf("parsing response: %w", err)
 	}
 
-	log.Trace("[FB]", "media upload %s %s\n", fileName, fileType)
+	log.Trace("[FB]", "media upload", fileName, fileType)
 	return response.ID, nil
 }
 

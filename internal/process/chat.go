@@ -21,7 +21,7 @@ var history map[string][]typeAiMessage
 var historyTime map[string]time.Time
 var historyInit bool
 
-type typeAiMessage = openai.TypeMessage
+type typeAiMessage = openai.TypeOpenaiChatMessage
 
 func Chat(userId, message, language string) (string, error) {
 	log.Debug("[chat] [in]", userId, message, language)
@@ -109,7 +109,7 @@ func Chat(userId, message, language string) (string, error) {
 			}
 		}
 
-		assistant, err := openai.Request(model, history[userId])
+		assistant, err := openai.Chat(model, history[userId])
 		if err != nil {
 			return "", err
 		}
