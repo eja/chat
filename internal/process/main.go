@@ -19,7 +19,7 @@ import (
 const maxAudioInputTime = 60
 const maxAudioOutputSize = 50 * 1000
 
-func Language(response string, language string) (string, string) {
+func FilterLanguage(response string, language string) (string, string) {
 	matchPattern := regexp.MustCompile(`\[\w{2}\]\s*$`)
 	languagePattern := regexp.MustCompile(`\[(.*?)\]`)
 
@@ -34,7 +34,7 @@ func Language(response string, language string) (string, string) {
 func Text(userId string, language string, text string) (string, error) {
 	response, err := Chat(userId, text, language)
 	if err == nil {
-		response, _ = Language(response, language)
+		response, _ = FilterLanguage(response, language)
 	}
 	return response, err
 }
@@ -91,7 +91,7 @@ func Audio(platform string, userId string, language string, chatId string, media
 		return response, nil
 	}
 
-	response, ttsLanguage := Language(response, language)
+	response, ttsLanguage := FilterLanguage(response, language)
 
 	fileAudioOutput := mediaPath + ".audio.out"
 
