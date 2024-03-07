@@ -24,6 +24,8 @@ github.com/eja/tibula v0.0.0-20240304115601-813beaeb7fd2 h1:mdWEnKgTe2LDsOMJ93bl
 github.com/eja/tibula v0.0.0-20240304115601-813beaeb7fd2/go.mod h1:poUDfEk3hfr4SP4CVRQ+RhRv2fRapNM7l8brrtaSjfE=
 github.com/eja/tibula v0.0.0-20240304120749-db662fe89f8a h1:Jf2zGXECZMalDpvoodXwrhP9J0pq0lHE9IDjQXJqKXI=
 github.com/eja/tibula v0.0.0-20240304120749-db662fe89f8a/go.mod h1:poUDfEk3hfr4SP4CVRQ+RhRv2fRapNM7l8brrtaSjfE=
+github.com/eja/tibula v0.0.0-20240307112702-e14eeca4c02a h1:qXviRgu7C1UzvQZdmjtbkqJIaq1SUmFVhBKNRz/bSqI=
+github.com/eja/tibula v0.0.0-20240307112702-e14eeca4c02a/go.mod h1:poUDfEk3hfr4SP4CVRQ+RhRv2fRapNM7l8brrtaSjfE=
 github.com/envoyproxy/go-control-plane v0.9.0/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/go-control-plane v0.9.4/go.mod h1:6rpuAdCZL397s3pYoYcLgu1mIlRU8Am5FuJP05cCM98=

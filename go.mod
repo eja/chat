@@ -5,7 +5,7 @@ go 1.21
 require (
 	cloud.google.com/go/speech v1.21.0
 	cloud.google.com/go/texttospeech v1.7.4
-	github.com/eja/tibula v0.0.0-20240304120749-db662fe89f8a
+	github.com/eja/tibula v0.0.0-20240307112702-e14eeca4c02a
 	google.golang.org/api v0.161.0
 	google.golang.org/genproto v0.0.0-20240125205218-1f4bbc51befe
 )
