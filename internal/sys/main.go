@@ -23,6 +23,7 @@ type typeConfigChat struct {
 	MetaToken         string `json:"meta_token,omitempty"`
 	TelegramToken     string `json:"telegram_token,omitempty"`
 	OpenaiToken       string `json:"openai_token,omitempty"`
+	PbxToken          string `json:"pbx_token,omitempty"`
 }
 
 func Configure() error {
@@ -34,6 +35,7 @@ func Configure() error {
 	flag.StringVar(&Options.MetaToken, "meta-token", "", "Meta token")
 	flag.StringVar(&Options.TelegramToken, "telegram-token", "", "Telegram token")
 	flag.StringVar(&Options.OpenaiToken, "openai-token", "", "OpenAI token")
+	flag.StringVar(&Options.PbxToken, "pbx-token", "", "PBX token")
 
 	if err := sys.Configure(); err != nil {
 		return err

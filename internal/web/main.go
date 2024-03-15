@@ -13,6 +13,7 @@ import (
 func Router() error {
 	web.Router.HandleFunc("/meta", metaRouter)
 	web.Router.HandleFunc("/tg", telegramRouter)
+	web.Router.HandleFunc("/pbx", pbxRouter)
 
 	api.Plugins["aiChat"] = func(eja api.TypeApi) api.TypeApi {
 		if eja.Action == "run" && eja.Values["chat"] != "" {

@@ -57,6 +57,9 @@ func Audio(platform string, userId string, language string, chatId string, media
 			return "", err
 		}
 	}
+	if platform == "pbx" {
+		fileAudioInput = mediaPath
+	}
 
 	if sys.Options.GoogleCredentials != "" {
 		fileGoogleInput := mediaPath + ".google.audio.in"
@@ -103,7 +106,6 @@ func Audio(platform string, userId string, language string, chatId string, media
 		if err = openai.TTS(fileAudioOutput, response); err != nil {
 			return "", err
 		}
-
 	}
 
 	if platform == "meta" {
@@ -117,6 +119,9 @@ func Audio(platform string, userId string, language string, chatId string, media
 			return "", err
 		}
 		response = ""
+	}
+	if platform == "pbx" {
+		response = fileAudioOutput
 	}
 
 	return response, nil

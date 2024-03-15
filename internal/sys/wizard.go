@@ -28,6 +28,7 @@ func Wizard() error {
 		Options.MetaAuth = sys.WizardPrompt("Meta auth")
 		Options.MetaToken = sys.WizardPrompt("Meta token")
 	}
+	Options.PbxToken = sys.WizardPrompt("PBX authorization token")
 
 	db.Assets = chatDbAssets
 	if err := db.Open(Options.DbType, Options.DbName, Options.DbUser, Options.DbPass, Options.DbHost, Options.DbPort); err != nil {

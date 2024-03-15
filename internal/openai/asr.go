@@ -23,6 +23,8 @@ type typeASRResponse struct {
 }
 
 func ASR(filePath string, languageCode string) (string, error) {
+	const audioType = "ogg"
+
 	file, err := os.Open(filePath)
 	if err != nil {
 		return "", err
@@ -34,8 +36,8 @@ func ASR(filePath string, languageCode string) (string, error) {
 	writer.WriteField("model", asrModel)
 	writer.WriteField("language", languageCode)
 	filePart, err := writer.CreatePart(map[string][]string{
-		"Content-Disposition": {"form-data; name=\"file\"; filename=\"" + filepath.Base(filePath) + ".ogg\""},
-		"Content-Type":        {"audio/ogg"},
+		"Content-Disposition": {fmt.Sprintf("form-data; name=\"file\"; filename=\"%s.%s\"", filepath.Base(filePath), audioType)},
+		"Content-Type":        {fmt.Sprintf("audio/%s", audioType)},
 	})
 	if err != nil {
 		return "", fmt.Errorf("creating form file")

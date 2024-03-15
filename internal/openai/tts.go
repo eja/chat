@@ -23,13 +23,14 @@ type typeTTSRequest struct {
 }
 
 func TTS(filePath string, text string) error {
-	url := "https://api.openai.com/v1/audio/speech"
+	const audioType = "opus"
+	const url = "https://api.openai.com/v1/audio/speech"
 
 	requestBody := typeTTSRequest{
 		Model:  ttsModel,
 		Input:  text,
 		Voice:  ttsVoice,
-		Format: "opus",
+		Format: audioType,
 	}
 
 	jsonValue, _ := json.Marshal(requestBody)
